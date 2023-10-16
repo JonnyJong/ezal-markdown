@@ -1,6 +1,6 @@
 {
   "name": "ezal-markdown",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "A simple, asynchronous markdown renderer",
   "main": "scripts/index.js",
   "types": "./types/index.d.ts",
@@ -15,7 +15,7 @@
     "markdown",
     "ezal"
   ],
-  "author": "JonnyJong",
+  "author": "jonnyjonny",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/JonnyJong/ezal-markdown/issues"
