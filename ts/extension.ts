@@ -50,3 +50,29 @@ export function getAllInlineExtensions(): IExtension[] {
   }
   return exts;
 }
+
+const internalExtensions: string[] = [
+  'blockquote',
+  'code',
+  'codeblock',
+  'dl',
+  'emoji',
+  'escape',
+  'footnote',
+  'heading',
+  'hr',
+  'html',
+  'image',
+  'link',
+  'list',
+  'table',
+  'styled-text',
+  // 'tag',
+];
+
+export function loadInternalExtensions() {
+  for (const name of internalExtensions) {
+    // @ts-ignore
+    registerExtensions(require(`./extensions/${name}`));
+  }
+}

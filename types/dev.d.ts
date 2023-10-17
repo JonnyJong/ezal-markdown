@@ -15,7 +15,13 @@ export type IVariables = {
    * 用户设定，渲染扩展不可更变
    * @readonly
    */
-  options: any,
+  options: {
+    code_highlight?: (src: string, language?: string)=>IAsyncReturnValue<{content: string, language: string}>,
+    footnote_class?: string,
+    heading_author_prefix?: string,
+    todo_list_class?: string,
+    [x: string | number | symbol]: any,
+  },
   /**
    * 目录
    */

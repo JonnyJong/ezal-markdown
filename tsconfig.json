@@ -6,12 +6,12 @@
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "outDir": "./scripts",
-    "sourceMap": true,
     "newLine": "lf",
     "rootDir": "./ts",
     "paths": {
-      "@ezal-markdown": ["./types/*"]
-    }
+      "../../types/dev": ["./types/*"]
+    },
+    "resolveJsonModule": true
   },
   "lib": ["es2020"],
   "include": ["./ts/**/*"],

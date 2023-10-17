@@ -1,5 +1,7 @@
-import { registerExtensions as registerExtensions_ori } from "./extension";
+import { loadInternalExtensions, registerExtensions as registerExtensions_ori } from "./extension";
 import { createVariables, render as render_ori, renderLine as renderLine_ori } from "./renderer";
+
+loadInternalExtensions();
 
 export const registerExtensions = registerExtensions_ori;
 export async function render(source: string, options: any) {
