@@ -49,7 +49,7 @@ const fenceCodeblock: IExtension = {
     if (typeof variables.options.code_highlight === 'function') {
       result = await variables.options.code_highlight(matched.text, lang);
     }
-    return`<pre><code${result.language === '' ? '' : ' class="' + result.language + '"'}>${result.content}</pre>`;
+    return`<pre><code${result.language === '' ? '' : ' class="' + result.language + '"'}>${result.content}</code></pre>`;
   },
 };
 export default [codeblock, fenceCodeblock];
