@@ -11,7 +11,8 @@
     "paths": {
       "../../types/dev": ["./types/*"]
     },
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "sourceMap": true
   },
   "lib": ["es2020"],
   "include": ["./ts/**/*"],

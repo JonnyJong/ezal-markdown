@@ -93,7 +93,42 @@ export type IExtension<> = {
    * @param variables 渲染时可能需要使用的变量
    * @returns 返回 HTML 格式的字符串
    */
-  render(matched: IMatched, variables: IVariables): IAsyncReturnValue<String>;
+  render(matched: IMatched, variables: IVariables): IAsyncReturnValue<string>;
+  /**
+   * 优先级
+   * 当匹配的起始位置相同时，由优先级高的渲染
+   */
+  priority?: number,
+};
+/**
+ * Markdown 标签
+ */
+export type ITag = {
+  /**
+   * 标签名
+   * 存在名称相同的标签时，旧标签将被覆盖
+   */
+  name: string,
+  /**
+   * 级别
+   * block：块状
+   * inline：行内
+   */
+  level: 'block' | 'inline',
+  /**
+   * 标签闭合
+   * 即使用该标签需要结束标签
+   * 行内默认为 false
+   * 块状默认为 true
+   */
+  end: IEmpty | boolean,
+  /**
+   * 渲染匹配的结果
+   * @param src 源文本
+   * @param variables 渲染时可能需要使用的变量
+   * @returns 返回 HTML 格式的字符串
+   */
+  render(matched: IMatched, variables: IVariables): IAsyncReturnValue<string>,
   /**
    * 优先级
    * 当匹配的起始位置相同时，由优先级高的渲染
@@ -146,6 +181,11 @@ export type INormalToc = {
  * @param extensions 扩展数组
  */
 export function IRegisterExtensions(extensions: IExtension[]): void;
+/**
+ * 注册标签
+ * @param tags 标签数组
+ */
+export function IRegisterTags(tags: ITag[]): void;
 /**
  * 渲染 Markdown 文本
  * 主要用于渲染一行的 Markdown 文本，仅行内拓展生效

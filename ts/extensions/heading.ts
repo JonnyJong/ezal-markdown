@@ -52,10 +52,11 @@ const headingUnderscore: IExtension = {
   level: 'block',
   priority: 0,
   start(src, variables) {
-    return src.match(/(^|(?<=\n))(\S+)\n([\-]{3,}|[\=]{3,})/)?.index;
+    debugger;
+    return src.match(/(^|(?<=\n))(.+?)\n([\-]{3,}|[\=]{3,})/)?.index;
   },
   match(src, variables) {
-    let matched = src.match(/(^|(?<=\n))(\S+)\n([\-]{3,}|[\=]{3,})/);
+    let matched = src.match(/(^|(?<=\n))(.+?)\n([\-]{3,}|[\=]{3,})/);
     if (!matched) return;
     if (matched[2].match(/\-*/)?.[0].length === matched[2].length) return;
     let {customId, text} = getCustomId(matched[2]);

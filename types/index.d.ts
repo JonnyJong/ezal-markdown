@@ -6,7 +6,7 @@
 type Empty = null | undefined | void;
 type AsyncReturnValue<T> = T | Promise<T>;
 
-import { IExtension, IFlatToc, IMatched, INormalToc, IToc, ITreeToc, IVariables } from "./dev";
+import { IExtension, IFlatToc, IMatched, INormalToc, IRegisterExtensions, IRegisterTags, IRender, IRenderLine, ITag, IToc, ITreeToc, IVariables } from "./dev";
 
 declare module 'ezal-markdown'{
   /**
@@ -21,6 +21,10 @@ declare module 'ezal-markdown'{
    * Markdown 渲染扩展
    */
   export type Extension = IExtension;
+  /**
+   * Markdown 标签
+   */
+  export type Tag = ITag;
   /**
    * 扁平目录项
    */
@@ -42,7 +46,12 @@ declare module 'ezal-markdown'{
    * 注册扩展
    * @param extensions 扩展数组
    */
-  export function registerExtensions(extensions: Extension[]): void;
+  export const registerExtensions: typeof IRegisterExtensions;
+  /**
+   * 注册标签
+   * @param tags 标签数组
+   */
+  export const registerTags: typeof IRegisterTags;
   /**
    * 渲染 Markdown 文本
    * 主要用于渲染一行的 Markdown 文本，仅行内拓展生效
@@ -58,7 +67,7 @@ declare module 'ezal-markdown'{
    */
   export function render(src: string, options: any): Promise<{content: string, variables: Variables, toc: NormalToc}>;
   export const origin: {
-    render(src: string, variables?: IVariables): Promise<{content: string, variables: IVariables, toc: INormalToc}>,
-    renderLine(src: string, variables?: IVariables): Promise<{content: string, variables: IVariables}>,
+    render: typeof IRender,
+    renderLine: typeof IRenderLine,
   }
 }
