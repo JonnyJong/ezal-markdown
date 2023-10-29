@@ -89,12 +89,12 @@ export async function walkLine(source: string, iVar: IVariables): Promise<Matche
       offset += next;
       if (!str.match(/\S/)) break;
     }
-    for (let i = 0; i < matcheds.length; i++) {
-      if (!matcheds[i]) continue;
-      for (let j = 0; j < matcheds[i].matched.raw.length; j++) {
-        delete matcheds[i + j];
-      }
-    }
   }
-  return matcheds;
+  let finalMatcheds: MatchedList = [];
+  for (let i = 0; i < matcheds.length; i++) {
+    if (!matcheds[i]) continue;
+    finalMatcheds[i] = matcheds[i];
+    i += matcheds[i].matched.raw.length;
+  }
+  return finalMatcheds;
 }
