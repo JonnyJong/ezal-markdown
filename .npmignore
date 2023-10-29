@@ -3,3 +3,6 @@ ts
 .editorconfig
 .gitignore
 tsconfig.json
+test
+todo.md
+.vscode

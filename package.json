@@ -1,6 +1,6 @@
 {
   "name": "ezal-markdown",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A simple, asynchronous markdown renderer",
   "main": "scripts/index.js",
   "types": "./types/index.d.ts",
