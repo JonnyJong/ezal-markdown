@@ -3,6 +3,9 @@ import { IFlatToc, INormalToc, IToc, ITreeToc } from "../types/dev";
 export class Toc implements IToc{
   #toc: IFlatToc[] = [];
   #ids: { [id: string]: number } = {};
+  #escapeId(id: string): string {
+    return id.trim().replace(/\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\_|\+|\~|\`|\{|\}|\[|\]|\:|\"|\;|\'|\<|\>|\?|\,|\.|\/|\||\\/g, '').replace(/[ ]+/g, '-');
+  };
   #setId(id: string): number {
     if (!this.#ids[id]) {
       this.#ids[id] = 1;
@@ -21,14 +24,15 @@ export class Toc implements IToc{
       if (id === '') throw new Error(`Using empty id in "${name}".`);
       this.#setId(id);
     } else {
-      let index = this.#setId(name);
-      id = name;
+      id = this.#escapeId(name);
+      let index = this.#setId(id);
       if (index > 0) id += '-' + index;
     }
     this.#toc.push({ name, level, id });
     return id;
   };
   addId(id: string): string {
+    id = this.#escapeId(id);
     let index = this.#setId(id);
     if (index > 0) id += '-' + index;
     return id;
