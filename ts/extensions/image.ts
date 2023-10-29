@@ -12,9 +12,9 @@ const image: IExtension = {
     if (!matched) return;
     let body = matched[2].split(' ');
     let link = body[0];
-    let title = body[1];
+    let title = body.slice(1).join(' ');
     if (title && (/^"(.*)"$/.test(title) || /^'(.*)'$/.test(title))) {
-      title = title.slice(1, title.length - 1);
+      title = title.slice(1, title.length - 1).replace(/\"/g, '&quot');
     }
     return{
       raw: matched[0],
