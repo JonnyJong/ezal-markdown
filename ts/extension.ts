@@ -73,6 +73,6 @@ const internalExtensions: string[] = [
 export function loadInternalExtensions() {
   for (const name of internalExtensions) {
     // @ts-ignore
-    registerExtensions(require(`./extensions/${name}`));
+    registerExtensions(require(`./extensions/${name}`).default);
   }
 }

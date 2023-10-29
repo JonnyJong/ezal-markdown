@@ -63,3 +63,5 @@ const table: IExtension = {
     return`<table><thead>${head}</thead><tbody>${body}</tbody></table>`;
   },
 };
+
+export default [table];
