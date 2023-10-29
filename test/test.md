@@ -11,6 +11,9 @@ Other Heading 1
 Other Heading 2
 ---------------
 
+## Custom Heading ID
+### Heading With Custom ID {#custom}
+
 # Paragraph & Line Break
 This is a markdown paragraph.
 这是同一个段落中的第二行。
@@ -81,11 +84,25 @@ __*~~IUD~~*__
 + 并且同样支持嵌套
   + 比如这样
 
+## Task
+- [ ] ABC
+
 # Codeblock
     <html>
       <head>
       </head>
     </html>
+
+
+## Fence Codeblock
+```c
+#include <stdio.h>
+
+void main()
+{
+  printf("Hello World!");
+}
+```
 
 # Horizontal Rule
 
@@ -108,3 +125,40 @@ ___
 [Jonny's Blog][1]
 
 [1]: https://jonnys.top
+[2]: https://jonnys.top "Jonny's Blog"
+
+# Image
+![image](https://jonnys.top/favicon.png "Jonny's Blog")
+
+# Escape
+&
+
+# HTML
+<input>
+
+# Table
+| Normal | Table |
+| ------ | ----- |
+| 1, 1   | 1, 2  |
+| 2, 1   | 2, 2  |
+
+| Syntax      | Description | Test Text     |
+| :---------- | :---------: | ------------: |
+| Header  \|  | Title       | Here's this   |
+| Paragraph   | Text        | And more      |
+
+# Footnote
+This is a footnote[^1].
+
+[^1]: This is the foot's content.
+
+# Define List
+Mainly
+: Balabala
+Two Lines
+: First line
+: Second Line
+
+# Emoji
+[For More Details](https://gist.github.com/rxaviers/7360908)
+:smiley:
