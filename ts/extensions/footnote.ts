@@ -21,12 +21,9 @@ const footnote: IExtension = {
   },
 };
 function getFootnoteUrl(id: string, v: IVariables) {
-  let url = id;
-  if (v.anchors[id]) {
-    v.anchors[id]++;
-    url += '-' + v.anchors[id];
-  }else{
-    v.anchors[id] = 0;
+  let url = v.toc.addId(id);
+  if (!v.footnote) {
+    v.footnote = {};
   }
   if (v.footnote[id]) {
     console.warn(`Same footnote id "${id}"`);
@@ -64,7 +61,7 @@ const footnoteSource: IExtension = {
   async render(matched, variables) {
     let html = '';
     for (const item of matched.items) {
-      html += `<dt id=""${item.url}>${item.id}</dt><dd>${(await render(item.text, variables, false)).content}</dd>`;
+      html += `<dt id="${item.url}">${item.id}</dt><dd>${(await render(item.text, variables, false)).content}</dd>`;
     }
     return`<dl>${html}</dl>`;
   },
