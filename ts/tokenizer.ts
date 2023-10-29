@@ -34,7 +34,7 @@ export async function walkBlocks(source: string, iVar: IVariables): Promise<Matc
           };
         }
       } else {
-        matched[index + offset] = {
+        matcheds[index + offset] = {
           ext,
           matched,
         };
@@ -48,9 +48,8 @@ export async function walkBlocks(source: string, iVar: IVariables): Promise<Matc
   let finalMatcheds: MatchedList = [];
   for (let i = 0; i < matcheds.length; i++) {
     if (!matcheds[i]) continue;
-    for (let j = 0; j < matcheds[i].matched.raw.length; j++) {
-      delete matcheds[i + j];
-    }
+    finalMatcheds[i] = matcheds[i];
+    i += matcheds[i].matched.raw.length;
   }
   return finalMatcheds;
 }
