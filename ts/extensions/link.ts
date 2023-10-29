@@ -105,6 +105,9 @@ function parseQuoteLinkSource(src: string, v: IVariables) {
       title = title.slice(1, title.length - 1);
     }
   }
+  if (!v.quoteLink) {
+    v.quoteLink = {};
+  }
   if (id in v.quoteLink) {
     console.warn(`Same qoute link id "${id}".`)
   }
