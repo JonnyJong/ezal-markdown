@@ -13,7 +13,7 @@ const hr: IExtension = {
     let a = src.match(/(^|(?<=\n))[\*\-_]{3,}\s/)?.[0];
     let raw = a;
     if (!a) {
-      raw = src.match(/(^|(?<=\n))[\*\-_]{3,}$/)?.[0];
+      raw = src.match(/(^|(?<=\n))[\*\-_]{3,}$/)?.[0].replace(/\n/, '');
     }
     if (!raw) return;
     return{
