@@ -12,7 +12,7 @@ const ol: IExtension = {
     let lines = src.split('\n');
     let end = 1;
     for (const line of lines) {
-      if (!line.match(/(\d\. |  |\t)/)) break;
+      if (!line.match(/(\d+\. |  |\t)/)) break;
       end++;
     }
     let rawLines = lines.slice(0, end);
@@ -24,7 +24,7 @@ const ol: IExtension = {
       text += line.slice(2).trim();
     }
     for (const line of rawLines) {
-      if (line.match(/\d\. /)?.index === 0) {
+      if (line.match(/\d+\. /)?.index === 0) {
         i++;
         args.push(line.slice(2).trim() + '\n');
         text += line.slice(2).trim() + '\n';
