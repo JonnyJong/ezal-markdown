@@ -2,11 +2,11 @@ import { IExtension } from "../../types/dev";
 import { renderLine } from "../renderer";
 
 const rule = {
-  bold: /\*\*(.*)\*\*/,
-  italic: /\*(.*)\*/,
-  boldAndItalic: /\*\*\*(.*)\*\*\*/,
-  underscore: /__(.*)__/,
-  del: /~~(.*)~~/,
+  bold: /\*\*(.*?)\*\*/,
+  italic: /\*(.*?)\*/,
+  boldAndItalic: /\*\*\*(.*?)\*\*\*/,
+  underscore: /__(.*?)__/,
+  del: /~~(.*?)~~/,
 };
 
 const bold: IExtension = {
