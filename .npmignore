@@ -6,5 +6,3 @@ tsconfig.json
 test
 todo.md
 .vscode
-scripts/*.js.map
-scripts/extensions/*.js.map

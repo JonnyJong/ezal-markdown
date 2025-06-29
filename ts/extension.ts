@@ -1,4 +1,19 @@
 import { IExtension } from "../types/dev";
+import BLOCKQUOTE from './extensions/blockquote';
+import CODE from './extensions/code'
+import CODEBLOCK from './extensions/codeblock'
+import DL from './extensions/dl'
+import EMOJI from './extensions/emoji'
+import ESCAPE from './extensions/escape'
+import FOOTNOTE from './extensions/footnote'
+import HEADING from './extensions/heading'
+import HR from './extensions/hr'
+import HTML from './extensions/html'
+import IMAGE from './extensions/image'
+import LINK from './extensions/link'
+import LIST from './extensions/list'
+import TABLE from './extensions/table'
+import STYLED_TEXT from './extensions/styled-text'
 
 type Extensions = {
   inline: {[name: string]: IExtension},
@@ -51,28 +66,20 @@ export function getAllInlineExtensions(): IExtension[] {
   return exts;
 }
 
-const internalExtensions: string[] = [
-  'blockquote',
-  'code',
-  'codeblock',
-  'dl',
-  'emoji',
-  'escape',
-  'footnote',
-  'heading',
-  'hr',
-  'html',
-  'image',
-  'link',
-  'list',
-  'table',
-  'styled-text',
-  // 'tag',
-];
-
 export function loadInternalExtensions() {
-  for (const name of internalExtensions) {
-    // @ts-ignore
-    registerExtensions(require(`./extensions/${name}`).default);
-  }
+  registerExtensions(BLOCKQUOTE);
+  registerExtensions(CODE);
+  registerExtensions(CODEBLOCK);
+  registerExtensions(DL);
+  registerExtensions(EMOJI);
+  registerExtensions(ESCAPE);
+  registerExtensions(FOOTNOTE);
+  registerExtensions(HEADING);
+  registerExtensions(HR);
+  registerExtensions(HTML);
+  registerExtensions(IMAGE);
+  registerExtensions(LINK);
+  registerExtensions(LIST);
+  registerExtensions(TABLE);
+  registerExtensions(STYLED_TEXT);
 }
