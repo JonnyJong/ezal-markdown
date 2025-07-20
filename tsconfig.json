@@ -1,19 +1,38 @@
 {
-  "compilerOptions": {
-    "strict": true,
-    "alwaysStrict": true,
-    "target": "es2020",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "outDir": "./scripts",
-    "newLine": "lf",
-    "rootDir": "./ts",
-    "paths": {
-      "../../types/dev": ["./types/*"]
-    },
-    "resolveJsonModule": true,
-    "sourceMap": true
-  },
-  "lib": ["es2020"],
-  "include": ["./ts/**/*"],
+	"compilerOptions": {
+		// Basic
+		"target": "esnext",
+		"module": "esnext",
+		"moduleResolution": "bundler",
+		// Checking
+		"strict": true,
+		"noImplicitAny": true,
+		"strictNullChecks": true,
+		"strictFunctionTypes": true,
+		"strictPropertyInitialization": true,
+		"noImplicitThis": true,
+		"alwaysStrict": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"noImplicitReturns": true,
+		"noFallthroughCasesInSwitch": true,
+		"allowJs": false,
+		"allowSyntheticDefaultImports": true,
+		"forceConsistentCasingInFileNames": true,
+		// Features
+		"esModuleInterop": true,
+		"resolveJsonModule": true,
+		"experimentalDecorators": true,
+		// Output
+		"sourceMap": true,
+		"removeComments": false,
+		"newLine": "lf",
+		"declaration": true,
+	},
+	"include": [
+		"src/**/*",
+	],
+	"exclude": [
+		"dist",
+	],
 }
