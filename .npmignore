@@ -7,4 +7,4 @@ test
 biome.json
 rolldown.config.ts
 tsconfig.json
-vitest.config.test
+vitest.config.ts
