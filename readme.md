@@ -38,7 +38,7 @@ import { EzalMarkdown, extractFrontmatter } from 'ezal-markdown';
 
 // Parse Frontmatter separately
 extractFrontmatter(markdownText).then((result) => {
-  result.data; // Get parsed data
+	result.data; // Get parsed data
 });
 
 // Parse Frontmatter while rendering

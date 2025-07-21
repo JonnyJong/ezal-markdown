@@ -38,7 +38,7 @@ import { EzalMarkdown, extractFrontmatter } from 'ezal-markdown';
 
 // 单独解析 Frontmatter
 extractFrontmatter(markdownText).then((result) => {
-  result.data; // 获取解析后的数据
+	result.data; // 获取解析后的数据
 });
 
 // 渲染时同时解析 Frontmatter
