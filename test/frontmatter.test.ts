@@ -53,13 +53,13 @@ title: doc2
 };
 
 describe('Frontmatter', () => {
-	it('nothing', () => {
-		expect(extractFrontmatter(DATA_NOTHING)).toBeUndefined();
+	it('nothing', async () => {
+		expect(await extractFrontmatter(DATA_NOTHING)).toBeUndefined();
 	});
-	it('single', () => {
-		expect(extractFrontmatter(DATA_SINGLE)).toStrictEqual(RESULT_SINGLE);
+	it('single', async () => {
+		expect(await extractFrontmatter(DATA_SINGLE)).toStrictEqual(RESULT_SINGLE);
 	});
-	it('multi', () => {
-		expect(extractFrontmatter(DATA_MULTI)).toStrictEqual(RESULT_MULTI);
+	it('multi', async () => {
+		expect(await extractFrontmatter(DATA_MULTI)).toStrictEqual(RESULT_MULTI);
 	});
 });
