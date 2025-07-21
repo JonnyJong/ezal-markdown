@@ -3,6 +3,11 @@ import { dts } from 'rolldown-plugin-dts';
 
 export default defineConfig([
 	{
+		input: ['src/index.ts'],
+		plugins: [dts()],
+		external: (id) => id.startsWith('node:') || ['yaml'].includes(id),
+	},
+	{
 		input: 'src/index.ts',
 		output: [
 			{
@@ -12,15 +17,10 @@ export default defineConfig([
 			},
 			{
 				file: 'dist/index.js',
-				format: 'commonjs',
+				format: 'cjs',
 				sourcemap: true,
 			},
 		],
-		external: (id) => id.startsWith('node:'),
-	},
-	{
-		input: ['src/index.ts'],
-		plugins: [dts()],
-		external: (id) => id.startsWith('node:'),
+		external: (id) => id.startsWith('node:') || ['yaml'].includes(id),
 	},
 ]);

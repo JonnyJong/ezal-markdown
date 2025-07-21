@@ -23,8 +23,31 @@ EzalMarkdown.render(markdownText).then((result) => {
 });
 // Create a renderer instance
 const renderer = new EzalMarkdown();
-renderer.then((result) => {
+renderer.render(markdownText).then((result) => {
 	const output = result.html; // Get the rendered HTML
+});
+```
+
+### Parsing FrontMatter
+
+> [!NOTE]
+> This feature requires optional dependency [yaml](https://www.npmjs.com/package/yaml) package.
+
+```ts
+import { EzalMarkdown, extractFrontmatter } from 'ezal-markdown';
+
+// Parse Frontmatter separately
+extractFrontmatter(markdownText).then((result) => {
+  result.data; // Get parsed data
+});
+
+// Parse Frontmatter while rendering
+EzalMarkdown.render(markdownText, { enableFrontmatter: true }).then((result) => {
+	result.frontmatter.data; // Get parsed data
+});
+const renderer = new EzalMarkdown();
+renderer.render(markdownText, { enableFrontmatter: true }).then((result) => {
+	result.frontmatter.data; // Get parsed data
 });
 ```
 

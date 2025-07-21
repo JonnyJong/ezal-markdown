@@ -1,4 +1,12 @@
-import yaml from 'yaml';
+import type {
+	DocumentOptions,
+	ParseOptions,
+	SchemaOptions,
+	parseAllDocuments,
+	parseDocument,
+} from 'yaml';
+
+type YamlModule = typeof import('yaml');
 
 export interface FrontmatterExtractResult {
 	/** 原始内容 */
@@ -16,24 +24,39 @@ export interface FrontmatterExtractResult {
 	errors?: unknown[];
 }
 
-export type YAMLParseOptions = yaml.ParseOptions &
-	yaml.DocumentOptions &
-	yaml.SchemaOptions;
+export type YAMLParseOptions = ParseOptions & DocumentOptions & SchemaOptions;
 
 export interface FrontmatterExtractOptions {
-	parse?: Parameters<typeof yaml.parseAllDocuments>[1];
-	toJS?: Parameters<ReturnType<typeof yaml.parseDocument>['toJS']>[0];
+	parse?: Parameters<typeof parseAllDocuments>[1];
+	toJS?: Parameters<ReturnType<typeof parseDocument>['toJS']>[0];
 	ignoreErrors?: boolean;
 }
 
 const PATTERN_WRAP = /\r\n?/g;
 const PATTERN_BEGIN = /^-{3,}\n/;
 
+let yaml: YamlModule | undefined = undefined;
+async function loadYaml(): Promise<YamlModule> {
+	if (yaml) return yaml;
+	try {
+		// @ts-ignore
+		yaml = require('yaml');
+		return yaml as YamlModule;
+	} catch {}
+	try {
+		yaml = await import('yaml');
+		return yaml;
+	} catch {
+		throw new Error(`The "yaml" package is required but not installed.`);
+	}
+}
+
 /** 提取 Front Matter */
-export function extractFrontmatter(
+export async function extractFrontmatter(
 	source: string,
 	options?: FrontmatterExtractOptions,
-): FrontmatterExtractResult | undefined {
+): Promise<FrontmatterExtractResult | undefined> {
+	const yaml = await loadYaml();
 	source = source.replace(PATTERN_WRAP, '\n');
 	const begin = source.match(PATTERN_BEGIN);
 	if (!begin) return;
@@ -46,9 +69,9 @@ export function extractFrontmatter(
 	const data: any[] = [];
 	const errors: unknown[] = [];
 
-	let docs: ReturnType<typeof yaml.parseAllDocuments>;
+	let docs: ReturnType<typeof parseAllDocuments>;
 	try {
-		docs = yaml.parseAllDocuments(content, options?.parse);
+		docs = yaml!.parseAllDocuments(content, options?.parse);
 	} catch (error) {
 		if (!options?.ignoreErrors) throw error;
 		errors.push(error);

@@ -195,7 +195,7 @@ export async function render(
 
 	let frontmatter: FrontmatterExtractResult | undefined = undefined;
 	if (resolvedOptions.enableFrontmatter) {
-		frontmatter = extractFrontmatter(
+		frontmatter = await extractFrontmatter(
 			source,
 			resolvedOptions.enableFrontmatter === true
 				? undefined

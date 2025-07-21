@@ -23,8 +23,31 @@ EzalMarkdown.render(markdownText).then((result) => {
 });
 // 创建渲染器实例
 const renderer = new EzalMarkdown();
-renderer.then((result) => {
+renderer.render(markdownText).then((result) => {
 	const output = result.html; // 获取渲染后的 HTML
+});
+```
+
+### 解析 FrontMatter
+
+> [!NOTE]
+> 此功能需要额外安装 [yaml](https://www.npmjs.com/package/yaml) 包（可选依赖）。
+
+```ts
+import { EzalMarkdown, extractFrontmatter } from 'ezal-markdown';
+
+// 单独解析 Frontmatter
+extractFrontmatter(markdownText).then((result) => {
+  result.data; // 获取解析后的数据
+});
+
+// 渲染时同时解析 Frontmatter
+EzalMarkdown.render(markdownText, { enableFrontmatter: true }).then((result) => {
+	result.frontmatter.data; // 获取解析后的数据
+});
+const renderer = new EzalMarkdown();
+renderer.render(markdownText, { enableFrontmatter: true }).then((result) => {
+	result.frontmatter.data; // 获取解析后的数据
 });
 ```
 
