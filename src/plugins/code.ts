@@ -36,7 +36,7 @@ export interface CodeblockParsed extends BlockParseResult {
 }
 
 const PATTERN_CODEBLOCK = /(^|(?<=\n))( {4}|\t)(.*)(\n(\2)(.*))*/;
-const PATTERN_CODEBLOCK_FENCED = /(?<=^|\n)(```|~~~)(.*?)\n(.*?)\n\1/s;
+const PATTERN_CODEBLOCK_FENCED = /(?<=^|\n)(`{3,}|~{3,})(.*?)\n(.*?)\n\1/s;
 
 type CodeHighlighter = (
 	code: string,

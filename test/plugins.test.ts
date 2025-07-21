@@ -41,6 +41,29 @@ A sentence in second paragraph.</blockquote>`);
 }</code></pre>`);
 	});
 
+	it('codeblock-fenced (more backticks)', async () => {
+		const result = await EzalMarkdown.render(
+			'````\n```js\nnested backticks\n```\n````',
+		);
+		expect(result.html).toEqual(
+			'<pre><code>```js\nnested backticks\n```</code></pre>',
+		);
+	});
+
+	it('codeblock-fenced (tildes)', async () => {
+		const result = await EzalMarkdown.render('~~~js\nconsole.log("Tilde");\n~~~');
+		expect(result.html).toEqual('<pre><code>console.log("Tilde");</code></pre>');
+	});
+
+	it('codeblock-fenced (more tildes)', async () => {
+		const result = await EzalMarkdown.render(
+			'~~~~\n~~~\nnested tildes\n~~~\n~~~~',
+		);
+		expect(result.html).toEqual(
+			'<pre><code>~~~\nnested tildes\n~~~</code></pre>',
+		);
+	});
+
 	it('footnote', async () => {
 		const result =
 			await EzalMarkdown.render(`Here's a sentence with a footnote.[^note]
