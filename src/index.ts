@@ -1,5 +1,5 @@
 import { Plugin, PluginsManager } from './plugin';
-import { RenderOptions, RenderResult, render } from './render';
+import { Logger, RenderOptions, RenderResult, render } from './render';
 import { NodeType } from './token';
 
 export type {
@@ -22,6 +22,7 @@ export type {
 	TypeToParseResult,
 	ParseChildrenToRenderChildren,
 	ParseResultToRenderSource,
+	PluginLogger,
 } from './plugin';
 export type { CodeParsed, CodeblockParsed } from './plugins/code';
 export type { ImageParsed, ImageRefParsed } from './plugins/image';
@@ -34,6 +35,8 @@ export type {
 	RenderContextOptions,
 	RenderOptions,
 	RenderResult,
+	LogInfo,
+	Logger,
 } from './render';
 
 export * from './frontmatter';
@@ -58,6 +61,7 @@ const globalPlugins = new PluginsManager();
 
 export class EzalMarkdown {
 	#plugins = new PluginsManager();
+	logger?: Logger;
 	/**
 	 * 设置插件
 	 * @returns 是否存在插件覆盖
@@ -86,8 +90,15 @@ export class EzalMarkdown {
 	}
 	/** 渲染 Markdown 文本 */
 	render(source: string, options?: RenderOptions): Promise<RenderResult> {
-		return render(source, globalPlugins.getPluginsMap(this.#plugins), options);
+		return render(source, globalPlugins.getPluginsMap(this.#plugins), {
+			...options,
+			context: {
+				logger: this.logger ?? EzalMarkdown.logger,
+				...options?.context,
+			},
+		});
 	}
+	static logger: Logger = console;
 	/**
 	 * 设置插件
 	 * @returns 是否存在插件覆盖
@@ -116,6 +127,12 @@ export class EzalMarkdown {
 	}
 	/** 渲染 Markdown 文本 */
 	static render(source: string, options?: RenderOptions): Promise<RenderResult> {
-		return render(source, globalPlugins.getPluginsMap(), options);
+		return render(source, globalPlugins.getPluginsMap(), {
+			...options,
+			context: {
+				logger: EzalMarkdown.logger,
+				...options?.context,
+			},
+		});
 	}
 }

@@ -7,11 +7,25 @@ import {
 } from './frontmatter';
 import { PluginContextMap, PluginsContextData, PluginsMap } from './plugin';
 import { Toc } from './toc';
-import { NODE_TYPES, Node, TokenizeOptions, tokenize } from './token';
+import { NODE_TYPES, Node, NodeType, TokenizeOptions, tokenize } from './token';
 import { transform } from './transform';
 import { omit } from './utils';
 
 //#region Define
+
+export interface LogInfo {
+	type: NodeType;
+	name: string;
+	message: string;
+	errObj?: unknown;
+}
+
+export interface Logger {
+	debug(info: LogInfo): void;
+	info(info: LogInfo): void;
+	warn(info: LogInfo): void;
+	error(info: LogInfo): void;
+}
 
 /** 渲染上下文 */
 export interface RenderContext {
@@ -25,6 +39,7 @@ export interface RenderContext {
 	readonly toc: Toc;
 	/** 字数统计 */
 	readonly counter: Counter;
+	readonly logger: Logger;
 }
 
 /** Markdown 格式参数 */
@@ -154,7 +169,14 @@ async function createRenderContext(
 	} else {
 		counter = new Counter();
 	}
-	const context = { shared, anchors, toc, counter } as unknown as RenderContext;
+	const logger: Logger = options.context.logger ?? console;
+	const context = {
+		shared,
+		anchors,
+		toc,
+		counter,
+		logger,
+	} as unknown as RenderContext;
 	(context as any).plugins = new PluginContextMap(plugins, context);
 	await context.plugins.init(options.pluginsContext);
 	return context;

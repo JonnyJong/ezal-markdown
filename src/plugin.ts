@@ -107,6 +107,13 @@ export type ParseResultToRenderSource<R> = R extends
 				: {})
 	: R;
 
+export interface PluginLogger {
+	debug(message: string, errObj?: unknown): void;
+	info(message: string, errObj?: unknown): void;
+	warn(message: string, errObj?: unknown): void;
+	error(message: string, errObj?: unknown): void;
+}
+
 /** 插件上下文类 */
 export class PluginContext<
 	C = never,
@@ -115,15 +122,46 @@ export class PluginContext<
 		TypeToParseResult<NodeType>,
 		C
 	>,
-> implements Omit<RenderContext, 'plugins' | 'pluginContexts'>
+> implements Omit<RenderContext, 'plugins' | 'pluginContexts' | 'logger'>
 {
 	#context: RenderContext;
 	#plugin: P;
+	#logger: PluginLogger;
 	/** 插件内上下文 */
 	self!: C;
 	constructor(context: RenderContext, plugin: P) {
 		this.#context = context;
 		this.#plugin = plugin;
+		this.#logger = Object.freeze({
+			debug: (message, errObj) =>
+				context.logger.debug({
+					type: plugin.type,
+					name: plugin.name,
+					message,
+					errObj,
+				}),
+			info: (message, errObj) =>
+				context.logger.info({
+					type: plugin.type,
+					name: plugin.name,
+					message,
+					errObj,
+				}),
+			warn: (message, errObj) =>
+				context.logger.warn({
+					type: plugin.type,
+					name: plugin.name,
+					message,
+					errObj,
+				}),
+			error: (message, errObj) =>
+				context.logger.error({
+					type: plugin.type,
+					name: plugin.name,
+					message,
+					errObj,
+				}),
+		} satisfies PluginLogger);
 	}
 	async init(preset?: { context: unknown }) {
 		if (preset) this.self = preset.context as C;
@@ -143,6 +181,9 @@ export class PluginContext<
 	}
 	get plugin() {
 		return this.#plugin;
+	}
+	get logger() {
+		return this.#logger;
 	}
 }
 

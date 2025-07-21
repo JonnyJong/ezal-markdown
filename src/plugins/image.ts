@@ -73,10 +73,10 @@ export const imageBlockRef: Plugin<'block', BlockParseResult & ImageRefParsed> =
 			if (!matched) return;
 			return { raw: matched[0], alt: matched[1], ref: matched[2] };
 		},
-		render({ ref, alt }, { shared }) {
+		render({ ref, alt }, { shared, logger }) {
 			let link: { url: string; title?: string } = (shared.links as any)?.[ref];
 			if (!link) {
-				console.warn(`Can not found reference link's source "${ref}"`);
+				logger.warn(`Can not found reference link's source "${ref}"`);
 				link = { url: '#' };
 			}
 			return $('img', { attr: { src: link.url, alt, title: link.title } });
@@ -95,10 +95,10 @@ export const imageInlineRef: Plugin<
 		if (!matched) return;
 		return { raw: matched[0], alt: matched[1], ref: matched[2] };
 	},
-	render({ ref, alt }, { shared }) {
+	render({ ref, alt }, { shared, logger }) {
 		let link: { url: string; title?: string } = (shared.links as any)?.[ref];
 		if (!link) {
-			console.warn(`Can not found reference link's source "${ref}"`);
+			logger.warn(`Can not found reference link's source "${ref}"`);
 			link = { url: '#' };
 		}
 		return $('img', { attr: { src: link.url, alt, title: link.title } });

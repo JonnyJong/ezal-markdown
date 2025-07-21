@@ -145,10 +145,10 @@ export function link(
 				if (!matched) return;
 				return { raw: matched[0], children: md(matched[1]), ref: matched[2] };
 			},
-			render({ ref, children }, { shared }) {
+			render({ ref, children }, { shared, logger }) {
 				let link: { url: string; title?: string } = (shared.links as any)?.[ref];
 				if (!link) {
-					console.warn(`Can not found reference link's source "${ref}"`);
+					logger.warn(`Can not found reference link's source "${ref}"`);
 					link = { url: '#' };
 				}
 				const target = targetResolver(link.url);
@@ -167,7 +167,7 @@ export function link(
 			type: 'block',
 			priority: 0,
 			start: PATTERN_LINK_SOURCE,
-			parse(source, { shared }) {
+			parse(source, { shared, logger }) {
 				const matched = source.match(PATTERN_LINK_SOURCE);
 				if (!matched) return;
 				const id = matched[1];
@@ -185,7 +185,7 @@ export function link(
 					shared.links = links;
 				}
 				if (links[id]) {
-					console.warn(
+					logger.warn(
 						`Duplicate link source id "${id}", old: { url: "${links[id].url}", title: "${links[id].title}" }, new: { url: "${url}", title: "${title}" }`,
 					);
 				}

@@ -42,10 +42,10 @@ export function footnote(
 				if (!matched) return;
 				return { raw: matched[0], id: matched[1] };
 			},
-			render({ id }, { shared }) {
+			render({ id }, { shared, logger }) {
 				const anchor = (shared.footnote as any)?.[id];
 				if (!anchor) {
-					console.warn(`Could not found footnote source of id "${id}"`);
+					logger.warn(`Could not found footnote source of id "${id}"`);
 				}
 				return $('a', {
 					class: className,
@@ -59,7 +59,7 @@ export function footnote(
 			type: 'block',
 			priority: 0,
 			start: PATTERN_SOURCE_START,
-			parse(source, { shared, anchors }) {
+			parse(source, { shared, anchors, logger }) {
 				let raw = source.match(PATTERN_SOURCE)?.[0];
 				if (!raw) return;
 				raw = raw.replace(PATTERN_TRAILING, '');
@@ -78,7 +78,7 @@ export function footnote(
 				}
 				for (const id of ids) {
 					if (footnote[id]) {
-						console.warn(`Duplicate footnote id "${id}"`);
+						logger.warn(`Duplicate footnote id "${id}"`);
 						continue;
 					}
 					footnote[id] = anchors.register((idPrefix ?? '') + id);
