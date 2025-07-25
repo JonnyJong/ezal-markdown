@@ -23,6 +23,7 @@ describe('Comprehensive Markdown Test', () => {
   - 嵌套项
     - 更深嵌套
 - **带格式**的项
+
 - [ ] 任务1
 - [x] 已完成任务
 
@@ -79,7 +80,8 @@ function hello() {
 			'<blockquote>这是一个块引用，里面可以包含<a href="https://example.com" target="_blank">链接</a>和<code>代码</code>。<br><blockquote>嵌套的块引用</blockquote></blockquote>',
 			'<h2 id="列表测试">列表测试</h2>',
 			'<h3 id="无序列表">无序列表</h3>',
-			'<ul><li>第一项<ul><li>嵌套项<ul><li>更深嵌套</li></ul></li></ul></li><li><b>带格式</b>的项</li><li>[ ] 任务1</li><li>[x] 已完成任务</li></ul>',
+			'<ul><li>第一项<ul><li>嵌套项<ul><li>更深嵌套</li></ul></li></ul></li><li><b>带格式</b>的项</li></ul>',
+			'<ul><li><input type="checkbox">任务1</li><li><input type="checkbox" checked>已完成任务</li></ul>',
 			'<h3 id="有序列表">有序列表</h3>',
 			'<ol><li>第一项<ol><li>嵌套项</li></ol></li><li>第二项</li><li>第三项</li></ol>',
 			'<h2 id="代码测试">代码测试</h2>',
@@ -92,7 +94,6 @@ function hello() {
 			'<p>这是一个<a href="#main-heading">内部链接</a>和一个<a href="https://example.com" title="标题" target="_blank">外部链接</a>。</p>',
 			'<p>图片测试：</p>',
 			'<img src="image.jpg" alt="替代文本" title="标题文本">',
-			'<p><img src="image.jpg" alt="替代文本" title="标题文本"></p>',
 			'<h2 id="水平线">水平线</h2>',
 			'<hr>',
 			'<h2 id="脚注">脚注</h2>',

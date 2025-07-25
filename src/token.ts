@@ -381,6 +381,7 @@ function normalizeParagraph(
 			para = createParagraphNode();
 			hasContent = false;
 			result.push(token);
+			continue;
 		}
 		para.children.push(token);
 		if (!isLineBreak(token)) {
