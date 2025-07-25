@@ -6,7 +6,6 @@
 	"module": "dist/index.esm.js",
 	"types": "dist/index.d.ts",
 	"scripts": {
-		"preinstall": "npx -y only-allow pnpm",
 		"test": "vitest",
 		"test:ci": "vitest run",
 		"build": "rolldown -c",
