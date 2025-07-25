@@ -11,16 +11,13 @@
 		"test:ci": "vitest run",
 		"build": "rolldown -c",
 		"clean": "rimraf dist",
-		"publish": "pnpm clean && pnpm build && pnpm publish"
+		"postpublish": "pnpm clean && pnpm build"
 	},
 	"repository": {
 		"type": "git",
 		"url": "git://github.com/JonnyJong/ezal-markdown.git"
 	},
-	"keywords": [
-		"markdown",
-		"ezal"
-	],
+	"keywords": ["markdown", "ezal"],
 	"author": "jonnyjonny",
 	"license": "MIT",
 	"bugs": {
