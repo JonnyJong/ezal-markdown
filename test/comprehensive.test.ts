@@ -70,6 +70,12 @@ function hello() {
 这是一个带有脚注的句子[^note].
 
 [^note]: 这是脚注的内容。
+
+## Tex
+
+This is inline $\\LaTeX$.
+
+$$\\text{This is block }\\LaTeX\\text{.}$$
 `;
 
 		const expectedHtml = [
@@ -99,6 +105,9 @@ function hello() {
 			'<h2 id="脚注">脚注</h2>',
 			'<p>这是一个带有脚注的句子<a href="#note">note</a>.</p>',
 			'<dl><dt id="note">note</dt><dd>这是脚注的内容。</dd></dl>',
+			'<h2 id="tex">Tex</h2>',
+			'<p>This is inline <span>$\\LaTeX$</span>.</p>',
+			'<p>$$\\text{This is block }\\LaTeX\\text{.}$$</p>',
 		].join('');
 
 		const result = await EzalMarkdown.render(markdownContent);

@@ -98,6 +98,8 @@ EzalMarkdown 中各语法通过插件实现。
 | list-unordered     | 0      | 无序列表           |
 | list-task          | 0      | 任务列表（GFM）    |
 | table              | 0      | 表格               |
+| tex-dollar         | 0      | Tex `$$...$$`      |
+| tex-bracket        | 0      | Tex `\[...\]`      |
 
 行级插件：
 | 名称            | 优先级 | 说明                     |
@@ -115,6 +117,8 @@ EzalMarkdown 中各语法通过插件实现。
 | link-reference  | 0      | 链接（引用）             |
 | link-bracket    | 0      | 自动链接                 |
 | email-bracket   | 0      | 自动邮箱链接             |
+| tex-dollar      | 0      | Tex `$...$`              |
+| tex-bracket     | 0      | Tex `\(...\)`            |
 
 原子插件：
 | 名称       | 优先级 | 说明                             |

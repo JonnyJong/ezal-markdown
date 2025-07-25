@@ -13,6 +13,7 @@ import {
 import { link } from './link';
 import { orderedList, taskList, unorderedList } from './list';
 import { table } from './table';
+import { tex } from './tex';
 import { bold, boldItalic, del, italic } from './text';
 
 export const plugins = {
@@ -36,4 +37,5 @@ export const plugins = {
 	table,
 	codeblock,
 	footnote,
+	tex,
 };

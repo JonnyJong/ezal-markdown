@@ -1,7 +1,7 @@
 import { it } from 'vitest';
 import { describe } from 'vitest';
 import { expect } from 'vitest';
-import { EzalMarkdown } from '../src';
+import { EzalMarkdown, plugins } from '../src';
 
 describe('Plugins', () => {
 	it('blockquote', async () => {
@@ -273,6 +273,26 @@ Above is a horizontal rule`);
 		);
 		expect(result.html).toEqual(
 			'<p>This is <b><i>bold and italic</i></b> text.</p>',
+		);
+	});
+
+	it('tex-dollar', async () => {
+		const result = await EzalMarkdown.render(
+			'This is inline $\\LaTeX$.\n$$\\text{This is block }\\LaTeX\\text{.}$$',
+		);
+		expect(result.html).toEqual(
+			'<p>This is inline <span>$\\LaTeX$</span>.</p><p>$$\\text{This is block }\\LaTeX\\text{.}$$</p>',
+		);
+	});
+
+	it('tex-bracket', async () => {
+		const renderer = new EzalMarkdown();
+		renderer.set(...plugins.tex({ enableBracketWrapping: true }));
+		const result = await renderer.render(
+			'This is inline \\(\\LaTeX\\).\n\\[\\text{This is block }\\LaTeX\\text{.}\\]',
+		);
+		expect(result.html).toEqual(
+			'<p>This is inline <span>\\(\\LaTeX\\)</span>.</p><p>\\[\\text{This is block }\\LaTeX\\text{.}\\]</p>',
 		);
 	});
 });

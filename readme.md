@@ -75,13 +75,13 @@ pnpm test
 Syntax in EzalMarkdown is implemented via plugins.
 
 Plugins are categorized into three types:
-- **block**: Block-level, parsed first (e.g., paragraphs, lists).
-- **inline**: Inline-level (e.g., bold, links).
-- **atomic**: Atomic-level, parsed last (e.g., plain text, line breaks).
+- block: Block-level, parsed first (e.g., paragraphs, lists).
+- inline: Inline-level (e.g., bold, links).
+- atomic: Atomic-level, parsed last (e.g., plain text, line breaks).
 
 ### Built-in Plugins
 
-**Block Plugins:**
+Block Plugins:
 | Name               | Priority | Description          |
 | ------------------ | -------- | -------------------- |
 | paragraph          | -2       | Paragraph (No parse) |
@@ -98,8 +98,10 @@ Plugins are categorized into three types:
 | list-unordered     | 0        | Unordered list       |
 | list-task          | 0        | Task list (GFM)      |
 | table              | 0        | Table                |
+| tex-dollar         | 0        | Tex `$$...$$`        |
+| tex-bracket        | 0        | Tex `\[...\]`        |
 
-**Inline Plugins:**
+Inline Plugins:
 | Name            | Priority | Description                                |
 | --------------- | -------- | ------------------------------------------ |
 | bold            | 0        | Bold text                                  |
@@ -115,8 +117,10 @@ Plugins are categorized into three types:
 | link-reference  | 0        | Link (reference)                           |
 | link-bracket    | 0        | Autolink                                   |
 | email-bracket   | 0        | Autolink for email                         |
+| tex-dollar      | 0        | Tex `$...$`                                |
+| tex-bracket     | 0        | Tex `\(...\)`                              |
 
-**Atomic Plugins:**
+Atomic Plugins:
 | Name       | Priority | Description                                                |
 | ---------- | -------- | ---------------------------------------------------------- |
 | text       | -1       | Plain text (No parse, word count tracked during rendering) |
