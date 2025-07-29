@@ -8,9 +8,9 @@
 	"scripts": {
 		"test": "vitest",
 		"test:ci": "vitest run",
-		"build": "rolldown -c",
+		"compile": "rolldown -c",
 		"clean": "rimraf dist",
-		"postpublish": "pnpm clean && pnpm build"
+		"prepublish": "pnpm clean && pnpm compile"
 	},
 	"repository": {
 		"type": "git",

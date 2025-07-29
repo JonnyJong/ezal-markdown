@@ -65,7 +65,7 @@ renderer.set(pluginA, pluginB);
 ## Build/Development
 ```sh
 pnpm i
-pnpm build
+pnpm compile
 pnpm test
 ```
 
