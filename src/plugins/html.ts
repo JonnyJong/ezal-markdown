@@ -41,7 +41,7 @@ export interface HTMLParsed {
 
 const PATTERN_BLOCK_START = /(?<=^|\n)<[A-Za-z][A-Za-z\d:._-]*?( .*?)?>/s;
 const PATTERN_INLINE_START = /(?<!\\)<[A-Za-z][A-Za-z\d:._-]*?( .*?)?>/s;
-const PATTERN_TAG_NAME = /(?<=^<)[A-Za-z][A-Za-z\d:._-]*?/;
+const PATTERN_TAG_NAME = /(?<=^<)[A-Za-z][A-Za-z\d:._-]*/;
 // biome-ignore lint/suspicious/noControlCharactersInRegex: Explicitly match the character range allowed for attribute names
 const PATTERN_ATTR_START = /(?<=[^\s"'<>=/\u007F\u0000-\u001F]+?=)["']/;
 const PATTERN_ATTR_SINGLE_END = /\\*?'/;
@@ -181,7 +181,7 @@ function processHeading(
 	if (idRange) {
 		start = `${start.slice(0, idRange[0])}id="${anchor}"${start.slice(idRange[1])}`;
 	} else {
-		start = `${start.slice(0, -1)} id=${anchor}>`;
+		start = `${start.slice(0, -1)} id="${anchor}">`;
 	}
 	if (options?.shiftLevels) {
 		const shiftedLevel = Math.min(level + 1, 6);
