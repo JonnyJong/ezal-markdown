@@ -181,7 +181,11 @@ function processHeading(
 	} else if (anchor) {
 		anchor = toc.register(content, level, options.anchorPrefix + anchor);
 	} else {
-		anchor = toc.register(content, level, options.anchorPrefix + content);
+		anchor = toc.register(
+			content,
+			level,
+			options.anchorPrefix + toc.anchors.slugify(content),
+		);
 	}
 	if (idRange) {
 		start = `${start.slice(0, idRange[0])}id="${anchor}"${start.slice(idRange[1])}`;

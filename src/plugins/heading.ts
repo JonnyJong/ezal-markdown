@@ -52,7 +52,11 @@ export function heading(options?: HeadingRenderOptions) {
 		if (anchor) {
 			return toc.register(text, level, options.anchorPrefix + anchor);
 		}
-		return toc.register(text, level, options.anchorPrefix + text);
+		return toc.register(
+			text,
+			level,
+			options.anchorPrefix + toc.anchors.slugify(text),
+		);
 	}
 	function render(
 		source: Omit<HeadingParsed, 'children'> & { children: string },
