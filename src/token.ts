@@ -307,7 +307,6 @@ function normalizeBreak(
 	let prevNonBreakType: NodeType = 'block';
 	for (const token of tokens) {
 		if (!isLineBreak(token)) {
-			prevNonBreakType = token.type;
 			if (
 				prevNonBreakType !== 'block' &&
 				token.type !== 'block' &&
@@ -323,6 +322,7 @@ function normalizeBreak(
 					}),
 				);
 			}
+			prevNonBreakType = token.type;
 			preIsBreak = false;
 			insertedBreak = false;
 			result.push(token);
