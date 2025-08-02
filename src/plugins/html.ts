@@ -243,7 +243,9 @@ export function html(
 		[start, end] = processHeading(start, end, tagName, content, toc, options);
 		return {
 			raw,
-			children: options?.parseInnerMarkdown ? md(content) : undefined,
+			children: options?.parseInnerMarkdown
+				? md(content, { skipParagraphWrapping: true })
+				: undefined,
 			start,
 			end,
 			content: options?.parseInnerMarkdown ? undefined : content,
