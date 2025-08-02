@@ -16,6 +16,10 @@ export interface HeadingRenderOptions {
 	shiftLevels?: boolean;
 	/** 标题锚前缀 */
 	anchorPrefix?: string;
+	/**
+	 * 锚前缀是否应用于自定义 ID 的标题
+	 */
+	applyAnchorPrefixToCustomId?: boolean;
 }
 
 interface HeadingParsed extends BlockParseResult {
@@ -39,25 +43,27 @@ function getCustomAnchor(text: string) {
 	};
 }
 
-export function heading(options?: HeadingRenderOptions) {
-	function register(
-		toc: Toc,
-		level: number,
-		text: string,
-		anchor?: string,
-	): string {
+export function createHeadingRegister(options?: HeadingRenderOptions) {
+	return (toc: Toc, level: number, text: string, anchor?: string): string => {
 		if (!options?.anchorPrefix) {
 			return toc.register(text, level, anchor);
 		}
-		if (anchor) {
+		if (!anchor) {
+			return toc.register(
+				text,
+				level,
+				options.anchorPrefix + toc.anchors.slugify(text),
+			);
+		}
+		if (options.applyAnchorPrefixToCustomId) {
 			return toc.register(text, level, options.anchorPrefix + anchor);
 		}
-		return toc.register(
-			text,
-			level,
-			options.anchorPrefix + toc.anchors.slugify(text),
-		);
-	}
+		return toc.register(text, level, anchor);
+	};
+}
+
+export function heading(options?: HeadingRenderOptions) {
+	const register = createHeadingRegister(options);
 	function render(
 		source: Omit<HeadingParsed, 'children'> & { children: string },
 	): string {

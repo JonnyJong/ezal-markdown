@@ -1,7 +1,7 @@
 import { ParseChild, Plugin, PluginContext, md } from '../plugin';
 import { Toc } from '../toc';
 import { VOID_ELEMENTS } from '../utils';
-import { HeadingRenderOptions } from './heading';
+import { HeadingRenderOptions, createHeadingRegister } from './heading';
 
 export interface HTMLRenderOptions extends HeadingRenderOptions {
 	/**
@@ -170,23 +170,14 @@ function processHeading(
 ): [start: string, end: string] {
 	if (options?.disableHeadingSemantics) return [start, end];
 	if (!PATTERN_HEADING.test(tagName)) return [start, end];
+	const register = createHeadingRegister(options);
 	const level = parseInt(start[1]);
 	const idRange = getIdPosition(start);
 	let anchor: string | undefined = undefined;
 	if (idRange && (idRange?.[1] ?? 0) > 2) {
 		anchor = start.slice(idRange[0] + 4, idRange[1] - 1);
 	}
-	if (!options?.anchorPrefix) {
-		anchor = toc.register(content, level, anchor);
-	} else if (anchor) {
-		anchor = toc.register(content, level, options.anchorPrefix + anchor);
-	} else {
-		anchor = toc.register(
-			content,
-			level,
-			options.anchorPrefix + toc.anchors.slugify(content),
-		);
-	}
+	anchor = register(toc, level, content, anchor);
 	if (idRange) {
 		start = `${start.slice(0, idRange[0])}id="${anchor}"${start.slice(idRange[1])}`;
 	} else {
