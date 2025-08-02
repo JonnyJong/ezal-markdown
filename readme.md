@@ -121,6 +121,7 @@ Inline Plugins:
 | tex-dollar      | 0        | Tex `$...$`                                |
 | tex-bracket     | 0        | Tex `\(...\)`                              |
 | html            | 0        |                                            |
+| escape          | -1       | Escape characters                          |
 
 Atomic Plugins:
 | Name       | Priority | Description                                                |
@@ -128,7 +129,7 @@ Atomic Plugins:
 | text       | -1       | Plain text (No parse, word count tracked during rendering) |
 | break-hard | 0        | Hard line break                                            |
 | break-soft | 0        | Soft line break                                            |
-| escape     | 0        | Escape characters                                          |
+| escape     | -1       | Escape characters                                          |
 
 ### Shared Rendering Context
 Built-in plugins create/use the following in the shared rendering context:

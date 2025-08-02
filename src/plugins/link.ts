@@ -25,11 +25,11 @@ export interface LinkSourceParsed extends BlockParseResult {
 }
 
 const PATTERN_ABSOLUTE_LINK = /^[a-z][a-z0-9+.-]*:|^\/\//;
-const PATTERN_LINK = /(?<!\\)\[(.*?[^\\])\]\((.+?)\)/;
-const PATTERN_LINK_BRACKET = /(?<!\\)<[A-Za-z]+:[^\s<>]+>/;
+const PATTERN_LINK = /\[(.*?[^\\])\]\((.+?)\)/;
+const PATTERN_LINK_BRACKET = /<[A-Za-z]+:[^\s<>]+>/;
 const PATTERN_EMAIL_BRACKET =
-	/(?<!\\)<[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?>/;
-const PATTERN_LINK_REF = /(?<!\\)\[(.*[^\\]?)\][ ]?\[([^^].*[^\\]?)\]/;
+	/<[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?>/;
+const PATTERN_LINK_REF = /\[(.*[^\\]?)\][ ]?\[([^^].*[^\\]?)\]/;
 const PATTERN_LINK_SOURCE = /(?<=^|\n)\[([^^].*[^\\]?)\]: (.*)(?=$|\n)/;
 
 const BRACKET_PAIRS = [

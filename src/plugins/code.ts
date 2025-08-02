@@ -11,7 +11,7 @@ export interface CodeParsed extends InlineParseResult {
 	code: string;
 }
 
-const PATTERN_CODE = /(?<!\\)(`{1,2})(.+?)\1/;
+const PATTERN_CODE = /(`{1,2})(.+?)\1/;
 
 export const code: Plugin<'inline', CodeParsed> = {
 	name: 'code',

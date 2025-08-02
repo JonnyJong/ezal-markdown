@@ -1,10 +1,10 @@
 import { InlineParseResult, ParseChild, Plugin, md } from '../plugin';
 import { $ } from '../utils';
 
-const PATTERN_BOLD = /(?<!\\)(\*\*|__)(.*?[^\\])\1/;
-const PATTERN_ITALIC = /(?<!\\)(\*|_)(.*?[^\\])\1/;
-const PATTERN_BOLD_ITALIC = /(?<!\\)(\*\*\*|___)(.*?[^\\])\1/;
-const PATTERN_DEL = /(?<!\\)~~(.*?[^\\])~~/;
+const PATTERN_BOLD = /(\*\*|__)(.*?[^\\])\1/;
+const PATTERN_ITALIC = /(\*|_)(.*?[^\\])\1/;
+const PATTERN_BOLD_ITALIC = /(\*\*\*|___)(.*?[^\\])\1/;
+const PATTERN_DEL = /~~(.*?[^\\])~~/;
 
 export const bold: Plugin<
 	'inline',

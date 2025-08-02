@@ -121,6 +121,7 @@ EzalMarkdown 中各语法通过插件实现。
 | tex-dollar      | 0      | Tex `$...$`              |
 | tex-bracket     | 0      | Tex `\(...\)`            |
 | html            | 0      |                          |
+| escape          | -1     | 转义字符                 |
 
 原子插件：
 | 名称       | 优先级 | 说明                             |
@@ -128,7 +129,7 @@ EzalMarkdown 中各语法通过插件实现。
 | text       | -1     | 纯文本（不解析，渲染时统计字数） |
 | break-hard | 0      | 硬换行                           |
 | break-soft | 0      | 软换行                           |
-| escape     | 0      | 转义字符                         |
+| escape     | -1     | 转义字符                         |
 
 ### 共享渲染上下文
 内置插件将会在共享渲染上下文中创建/使用以下内容：

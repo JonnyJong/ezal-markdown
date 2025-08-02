@@ -40,7 +40,7 @@ export interface HTMLParsed {
 }
 
 const PATTERN_BLOCK_START = /(?<=^|\n)<[A-Za-z][A-Za-z\d:._-]*?( .*?)?>/s;
-const PATTERN_INLINE_START = /(?<!\\)<[A-Za-z][A-Za-z\d:._-]*?( .*?)?>/s;
+const PATTERN_INLINE_START = /<[A-Za-z][A-Za-z\d:._-]*?( .*?)?>/s;
 const PATTERN_TAG_NAME = /(?<=^<)[A-Za-z][A-Za-z\d:._-]*/;
 // biome-ignore lint/suspicious/noControlCharactersInRegex: Explicitly match the character range allowed for attribute names
 const PATTERN_ATTR_START = /(?<=[^\s"'<>=/\u007F\u0000-\u001F]+?=)["']/;

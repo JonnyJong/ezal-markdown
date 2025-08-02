@@ -1,10 +1,11 @@
 import { BlockParseResult, ParseChild, Plugin } from '../plugin';
 import { NodeType } from '../token';
-import { $ } from '../utils';
+import { $, escapeHTML } from '../utils';
 
 const PATTERN_BREAK_START = /(?<!\n|^)( {2}|\\)\n/;
 const PATTERN_BREAK = /^( {2}|\\)\n/;
-const PATTERN_ESCAPE = /(?<!\\)\\[\\`*_{}[\]()#+-.!|<>]/;
+const PATTERN_ESCAPE =
+	/(?<!\\)\\[\u0021-\u002F\u003A-\u0040\u005B-\u0060\u007B-\u007E]/;
 
 export function base(): Plugin<NodeType>[] {
 	return [
@@ -59,7 +60,7 @@ export function base(): Plugin<NodeType>[] {
 		{
 			name: 'escape',
 			type: 'atomic',
-			priority: 0,
+			priority: -1,
 			start: PATTERN_ESCAPE,
 			parse(source) {
 				const raw = source.match(PATTERN_ESCAPE)?.[0];
@@ -67,7 +68,21 @@ export function base(): Plugin<NodeType>[] {
 				return { raw };
 			},
 			render(source) {
-				return source.raw[1];
+				return escapeHTML(source.raw[1]);
+			},
+		},
+		{
+			name: 'escape',
+			type: 'inline',
+			priority: -1,
+			start: PATTERN_ESCAPE,
+			parse(source) {
+				const raw = source.match(PATTERN_ESCAPE)?.[0];
+				if (raw?.length !== 2) return;
+				return { raw };
+			},
+			render(source) {
+				return escapeHTML(source.raw[1]);
 			},
 		},
 	];

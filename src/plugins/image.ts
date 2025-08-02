@@ -9,7 +9,7 @@ export interface ImageParsed {
 }
 
 const PATTERN_BLOCK = /(?<=^|\n)!\[(.*[^\\])\]\((.*)\)(?=$|\n)/;
-const PATTERN_INLINE = /(?<!\\)!\[(.*[^\\])\]\((.*)\)/;
+const PATTERN_INLINE = /!\[(.*[^\\])\]\((.*)\)/;
 
 function parse(matched: RegExpMatchArray): ImageParsed {
 	const alt = matched[1];
@@ -60,7 +60,7 @@ export interface ImageRefParsed {
 
 const PATTERN_BLOCK_REF =
 	/(?<=^|\n)!\[(.*[^\\]?)\][ ]?\[([^^].*[^\\]?)\](?=$|\n)/;
-const PATTERN_INLINE_REF = /(?<!\\)!\[(.*[^\\]?)\][ ]?\[([^^].*[^\\]?)\]/;
+const PATTERN_INLINE_REF = /!\[(.*[^\\]?)\][ ]?\[([^^].*[^\\]?)\]/;
 
 export const imageBlockRef: Plugin<'block', BlockParseResult & ImageRefParsed> =
 	{

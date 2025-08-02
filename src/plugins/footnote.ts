@@ -16,7 +16,7 @@ interface FootnoteSourceParsed extends BlockParseResult {
 	ids: string[];
 }
 
-const PATTERN_REF = /(?<!\\)\[\^(.*?[^\\]?)\]/;
+const PATTERN_REF = /\[\^(.*?[^\\]?)\]/;
 const PATTERN_SOURCE_START = /(?<=^|\n)\[\^(.*?[^\\]?)\]: /;
 const PATTERN_SOURCE =
 	/(?<=^|\n)\[\^(.*?[^\\]?)\]: .*($|\n)((( {1,4}|\t)|\[.*?[^\\]?\]: ).*($|\n))*?(?=$|\n)/;
