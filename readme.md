@@ -100,6 +100,7 @@ Block Plugins:
 | table              | 0        | Table                |
 | tex-dollar         | 0        | Tex `$$...$$`        |
 | tex-bracket        | 0        | Tex `\[...\]`        |
+| html               | 0        |                      |
 
 Inline Plugins:
 | Name            | Priority | Description                                |
@@ -119,6 +120,7 @@ Inline Plugins:
 | email-bracket   | 0        | Autolink for email                         |
 | tex-dollar      | 0        | Tex `$...$`                                |
 | tex-bracket     | 0        | Tex `\(...\)`                              |
+| html            | 0        |                                            |
 
 Atomic Plugins:
 | Name       | Priority | Description                                                |

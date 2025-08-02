@@ -369,6 +369,7 @@ export class PluginsManager {
 			...plugins.codeblock(),
 			...plugins.footnote(),
 			...plugins.tex(),
+			...plugins.html(),
 		);
 	}
 	/**

@@ -187,7 +187,7 @@ export interface HTMLTagCreateOptions {
 	content?: string | string[];
 }
 
-const VOID_ELEMENTS: string[] = [
+export const VOID_ELEMENTS: readonly string[] = Object.freeze([
 	'area',
 	'base',
 	'br',
@@ -202,7 +202,7 @@ const VOID_ELEMENTS: string[] = [
 	'source',
 	'track',
 	'wbr',
-];
+]);
 const PATTERN_CSS_VAR_DECLARE = /^\$/;
 const PATTERN_CSS_UPPER = /[A-Z]/g;
 const PATTERN_CSS_VAR = /\$[A-Za-z][A-Za-z0-9]*/g;

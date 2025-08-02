@@ -4,7 +4,7 @@ import { $ } from '../utils';
 
 const PATTERN_BREAK_START = /(?<!\n|^)( {2}|\\)\n/;
 const PATTERN_BREAK = /^( {2}|\\)\n/;
-const PATTERN_ESCAPE = /(?<!\\)\\[\\`*_{}[\]()#+-.!|]/;
+const PATTERN_ESCAPE = /(?<!\\)\\[\\`*_{}[\]()#+-.!|<>]/;
 
 export function base(): Plugin<NodeType>[] {
 	return [

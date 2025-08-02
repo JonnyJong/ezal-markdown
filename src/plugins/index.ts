@@ -4,6 +4,7 @@ import { code, codeblock } from './code';
 import { footnote } from './footnote';
 import { heading } from './heading';
 import { hr } from './hr';
+import { html } from './html';
 import {
 	imageBlock,
 	imageBlockRef,
@@ -38,4 +39,5 @@ export const plugins = {
 	codeblock,
 	footnote,
 	tex,
+	html,
 };
