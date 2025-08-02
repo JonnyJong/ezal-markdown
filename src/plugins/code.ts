@@ -5,7 +5,7 @@ import {
 	Plugin,
 	md,
 } from '../plugin';
-import { $, normalizeIndent } from '../utils';
+import { $, escapeHTML, normalizeIndent } from '../utils';
 
 export interface CodeParsed extends InlineParseResult {
 	code: string;
@@ -46,7 +46,7 @@ type CodeHighlighter = (
 	| Promise<{ html: string; className?: string }>;
 
 const DEFAULT_HIGHLIGHTER: CodeHighlighter = (code) => {
-	return { html: code };
+	return { html: escapeHTML(code) };
 };
 
 export function codeblock(

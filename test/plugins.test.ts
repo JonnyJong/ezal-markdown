@@ -28,7 +28,7 @@ A sentence in second paragraph.</blockquote>`);
         console.log("Hello, world!");
     }`);
 		expect(result.html).toEqual(`<pre><code>function hello() {
-    console.log("Hello, world!");
+    console.log(&quot;Hello, world!&quot;);
 }</code></pre>`);
 	});
 
@@ -37,7 +37,7 @@ A sentence in second paragraph.</blockquote>`);
 			'```javascript\nfunction hello() {\n    console.log("Hello, world!");\n}\n```',
 		);
 		expect(result.html).toEqual(`<pre><code>function hello() {
-    console.log("Hello, world!");
+    console.log(&quot;Hello, world!&quot;);
 }</code></pre>`);
 	});
 
@@ -52,7 +52,9 @@ A sentence in second paragraph.</blockquote>`);
 
 	it('codeblock-fenced (tildes)', async () => {
 		const result = await EzalMarkdown.render('~~~js\nconsole.log("Tilde");\n~~~');
-		expect(result.html).toEqual('<pre><code>console.log("Tilde");</code></pre>');
+		expect(result.html).toEqual(
+			'<pre><code>console.log(&quot;Tilde&quot;);</code></pre>',
+		);
 	});
 
 	it('codeblock-fenced (more tildes)', async () => {

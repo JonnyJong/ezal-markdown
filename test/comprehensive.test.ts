@@ -93,7 +93,7 @@ $$\\text{This is block }\\LaTeX\\text{.}$$
 			'<h2 id="代码测试">代码测试</h2>',
 			'<p>行内代码：<code>console.log(&quot;Hello&quot;)</code></p>',
 			'<p>代码块：</p>',
-			'<pre><code>function hello() {\n  // 这是一个代码块\n  console.log("Hello, world!");\n}</code></pre>',
+			'<pre><code>function hello() {\n  // 这是一个代码块\n  console.log(&quot;Hello, world!&quot;);\n}</code></pre>',
 			'<h2 id="表格测试">表格测试</h2>',
 			'<table><thead><tr><th style="text-align:left;">语法</th><th style="text-align:center;">描述</th><th style="text-align:right;">示例</th></tr></thead><tbody><tr><td style="text-align:left;">标题</td><td style="text-align:center;">居中</td><td style="text-align:right;">右对齐</td></tr><tr><td style="text-align:left;"><code>code</code></td><td style="text-align:center;"><b>加粗</b></td><td style="text-align:right;"><i>斜体</i></td></tr><tr><td style="text-align:left;"><a href="#main-heading">链接</a></td><td style="text-align:center;"><img src="icon.png" alt="图片"></td><td style="text-align:right;"><del>删除线</del></td></tr></tbody></table>',
 			'<h2 id="链接和图片">链接和图片</h2>',
