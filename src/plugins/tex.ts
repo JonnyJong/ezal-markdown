@@ -94,7 +94,7 @@ export function tex(options?: TexOptions | TexOptions['renderer']): TexPlugins {
 				if (!enableBracketWrapping) return;
 				const raw = source.match(PATTERN_BLOCK_BRACKET)?.[0];
 				if (!raw) return;
-				return { raw, tex: raw.slice(1, -1) };
+				return { raw, tex: raw.slice(2, -2) };
 			},
 			render: renderBlock,
 		},
@@ -107,7 +107,7 @@ export function tex(options?: TexOptions | TexOptions['renderer']): TexPlugins {
 				if (!enableBracketWrapping) return;
 				const raw = source.match(PATTERN_INLINE_BRACKET)?.[0];
 				if (!raw) return;
-				return { raw, tex: raw.slice(1, -1) };
+				return { raw, tex: raw.slice(2, -2) };
 			},
 			render: renderInline,
 		},
