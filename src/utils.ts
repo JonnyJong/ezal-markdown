@@ -1,3 +1,6 @@
+export type PromiseOr<T> = T | Promise<T>;
+export type ArrayOr<T> = T | T[];
+
 export function mergeMap<K, V>(target: Map<K, V>, source: Map<K, V>) {
 	for (const [k, v] of source) {
 		target.set(k, v);
@@ -16,7 +19,7 @@ export type MapChildren<T, A, B> = T extends A
 export async function mapChildren<A, B, T extends Children<A>>(
 	children: T,
 	validator: (value: unknown) => value is A,
-	transformer: (value: A) => B | Promise<B>,
+	transformer: (value: A) => PromiseOr<B>,
 ): Promise<MapChildren<T, A, B>> {
 	const stack: Array<{
 		value: unknown;
@@ -286,4 +289,18 @@ export function $(
 	// Closing Tag
 	if (!VOID_ELEMENTS.includes(tagName)) result += `</${tagName}>`;
 	return result;
+}
+
+/** 渲染钩子 */
+export type RenderHook<T> = ArrayOr<(data: T) => PromiseOr<T>>;
+
+export async function execHooks<T>(data: T, hooks?: RenderHook<T>): Promise<T> {
+	if (!hooks) return data;
+	if (typeof hooks === 'function') {
+		return hooks(data);
+	}
+	for (const hook of hooks) {
+		data = await hook(data);
+	}
+	return data;
 }

@@ -13,7 +13,7 @@ import {
 	Node,
 	NodeType,
 } from './token';
-import { Children, mapChildren } from './utils';
+import { Children, PromiseOr, mapChildren } from './utils';
 
 function createPluginContextGetter(context: RenderContext) {
 	return <T extends NodeType>(
@@ -35,7 +35,7 @@ function parsedChildValidator(value: unknown): value is Node[] {
 function transformAtomic(
 	context: PluginContext<unknown, Plugin<'atomic', AtomicParseResult, unknown>>,
 	token: AtomicNode,
-): string | Promise<string> {
+): PromiseOr<string> {
 	return context.plugin.render({ ...token.data, raw: token.raw }, context);
 }
 

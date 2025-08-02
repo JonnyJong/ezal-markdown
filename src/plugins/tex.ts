@@ -1,5 +1,5 @@
 import { BlockParseResult, InlineParseResult, Plugin } from '../plugin';
-import { $ } from '../utils';
+import { $, PromiseOr } from '../utils';
 
 type TexPlugins = [
 	Plugin<'block', BlockParseResult & TexParsed>,
@@ -19,7 +19,7 @@ export interface TexOptions {
 	 * @description
 	 * 若未指定，将原样输出
 	 */
-	renderer?(tex: string, display: boolean): string | Promise<string>;
+	renderer?(tex: string, display: boolean): PromiseOr<string>;
 	/**
 	 * 禁用 `$...$` 和 `$$...$$` 语法
 	 * @default false

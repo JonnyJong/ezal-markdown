@@ -247,8 +247,8 @@ interface BlockNode extends BaseNode {
 ### Rendering Flow
 ```mermaid
 flowchart LR
-    A[Start] --> B[Unify line breaks to LF]
-    B --> C[Create rendering context]
+    A[Start] --> B[Create rendering context]
+    B --> C[Unify line breaks to LF]
     C --> D[Extract FrontMatter]
     D --> E[Generate AST]
     E --> F[Convert AST to HTML]
@@ -272,9 +272,9 @@ flowchart LR
 
 Detailed rendering steps:
 1. Preprocessing
-   - Unify line breaks to LF format.
    - Create a rendering context (including utilities like Anchors, Toc, Counter).
    - Initialize plugin-specific contexts (if `context` is defined).
+   - Unify line breaks to LF format.
 2. AST Generation
    - Parse from the highest level (`maxLevel`) to atomic level (`atomic`):
      1. Call `start` for all potential match positions.
@@ -290,3 +290,11 @@ Detailed rendering steps:
    - Start rendering from the innermost nodes, left to right.
    - Call `render` to generate HTML fragments.
    - Combine all fragments for the final HTML output.
+
+### Hooks
+Hooks can be set before and after each stage. The stages where hooks can be set are as follows:
+- Preprocessing: `prePreprocessing`, `postPreprocessing`
+- Reading frontmatter: `preFrontmatter`, `postFrontmatter`
+- Tokenization: `preTokenize`, `postTokenize`
+  - Normalization: `preNormalize`, `postNormalize`
+- Transformation: `preTransform`, `postTransform`

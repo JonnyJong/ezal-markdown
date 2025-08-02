@@ -8,8 +8,8 @@ import {
 	TypeToParseResult,
 	// compareContext,
 } from './plugin';
-import { MarkdownFormatOptions, RenderContext } from './render';
-import { Children, mapChildren, omit } from './utils';
+import { MarkdownFormatOptions, RenderContext, RenderHooks } from './render';
+import { Children, execHooks, mapChildren, omit } from './utils';
 
 //#region Define
 
@@ -238,6 +238,7 @@ async function transform<T extends NodeType>(
 	parsed: TypeToParseResult<T>,
 	context: RenderContext,
 	options: TokenizeOptions,
+	hooks: RenderHooks,
 ): Promise<TypeToNode<T>> {
 	if (type === 'atomic') {
 		return node({
@@ -253,11 +254,16 @@ async function transform<T extends NodeType>(
 				(v) => v instanceof ParseChild,
 				async (child): Promise<Node[]> =>
 					(
-						await tokenize(child.content, context, {
-							...options,
-							...child.options,
-							maxLevel: minLevel(type, child.options?.maxLevel ?? type),
-						})
+						await tokenize(
+							child.content,
+							context,
+							{
+								...options,
+								...child.options,
+								maxLevel: minLevel(type, child.options?.maxLevel ?? type),
+							},
+							hooks,
+						)
 					).map((node) => {
 						node.options = child.options;
 						return node;
@@ -416,7 +422,9 @@ export async function tokenize(
 	source: string,
 	context: RenderContext,
 	options: TokenizeOptions,
+	hooks: RenderHooks,
 ): Promise<Node[]> {
+	source = await execHooks(source, hooks.preTokenize);
 	const tokens: (Node | GapRange)[] = [[0, source.length]];
 	for (const type of resolveLevel(options.maxLevel)) {
 		for (let i = 0; i < tokens.length; i++) {
@@ -438,6 +446,7 @@ export async function tokenize(
 						...options,
 						skipParagraphWrapping: false,
 					},
+					hooks,
 				);
 				tokens.splice(i, 0, transformed);
 				i++;
@@ -455,5 +464,11 @@ export async function tokenize(
 		});
 	}
 	if (options.maxLevel !== 'block') options.skipParagraphWrapping = true;
-	return normalize(tokens as Node[], options);
+	return execHooks(
+		await execHooks(
+			normalize(await execHooks(tokens as Node[], hooks.preNormalize), options),
+			hooks.postNormalize,
+		),
+		hooks.postTokenize,
+	);
 }

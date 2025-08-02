@@ -1,11 +1,9 @@
 import { plugins } from './plugins';
 import { RenderContext } from './render';
 import { NODE_TYPES, NodeType, TokenizeOptions } from './token';
-import { Children, MapChildren, mergeMap } from './utils';
+import { Children, MapChildren, PromiseOr, mergeMap } from './utils';
 
 //#region Plugin
-type PromiseOr<T> = T | Promise<T>;
-
 /**
  * 待处理的子内容
  * @description

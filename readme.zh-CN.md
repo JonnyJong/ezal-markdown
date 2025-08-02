@@ -247,8 +247,8 @@ interface BlockNode extends BaseNode {
 ### 渲染流程
 ```mermaid
 flowchart LR
-    A[开始] --> B[统一换行符为 LF]
-    B --> C[创建渲染上下文]
+    A[开始] --> B[创建渲染上下文]
+    B --> C[统一换行符为 LF]
     C --> D[提取 FrontMatter]
     D --> E[生成 AST]
     E --> F[转换 AST 为 HTML]
@@ -272,9 +272,9 @@ flowchart LR
 
 详细渲染步骤：
 1. 预处理
-   - 统一换行符为 LF 格式
    - 创建渲染上下文（包括 Anchors、Toc、Counter 等工具类）
    - 初始化各插件的上下文（如果定义了 `context` 函数）
+   - 统一换行符为 LF 格式
 2. AST 生成
    - 从最高级别（`maxLevel`）到原子级别（`atomic`）逐级解析：
      1. 调用插件的 `start` 方法查找所有可能匹配的起点
@@ -290,3 +290,11 @@ flowchart LR
    - 从最内层节点开始，从左到右依次渲染
    - 调用各插件的 `render` 方法生成 HTML 片段
    - 组合所有片段得到最终 HTML 输出
+
+### 钩子
+在各阶段前后都可以设置钩子，可设置钩子的阶段如下：
+- 预处理：`prePreprocessing`、`postPreprocessing`
+- 读取 frontmatter：`preFrontmatter`、`postFrontmatter`
+- 分词：`preTokenize`、`postTokenize`
+  - 规范化：`preNormalize`、`postNormalize`
+- 转换：`preTransform`、`postTransform`

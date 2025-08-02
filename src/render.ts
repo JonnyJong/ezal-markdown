@@ -9,7 +9,7 @@ import { PluginContextMap, PluginsContextData, PluginsMap } from './plugin';
 import { Toc } from './toc';
 import { NODE_TYPES, Node, NodeType, TokenizeOptions, tokenize } from './token';
 import { transform } from './transform';
-import { omit } from './utils';
+import { RenderHook, execHooks, omit } from './utils';
 
 //#region Define
 
@@ -25,6 +25,30 @@ export interface Logger {
 	info(info: LogInfo): void;
 	warn(info: LogInfo): void;
 	error(info: LogInfo): void;
+}
+
+/** 渲染钩子 */
+export interface RenderHooks {
+	/** 预处理前 */
+	prePreprocessing?: RenderHook<string>;
+	/** 预处理后 */
+	postPreprocessing?: RenderHook<string>;
+	/** 读取 frontmatter 前 */
+	preFrontmatter?: RenderHook<string>;
+	/** 读取 frontmatter 后 */
+	postFrontmatter?: RenderHook<string>;
+	/** 分词前 */
+	preTokenize?: RenderHook<string>;
+	/** 规范会前 */
+	preNormalize?: RenderHook<Node[]>;
+	/** 规范会后 */
+	postNormalize?: RenderHook<Node[]>;
+	/** 分词后 */
+	postTokenize?: RenderHook<Node[]>;
+	/** 转换前 */
+	preTransform?: RenderHook<Node[]>;
+	/** 转换后 */
+	postTransform?: RenderHook<string>;
 }
 
 /** 渲染上下文 */
@@ -69,6 +93,8 @@ export interface RenderContextOptions {
 	 * 3. 不正确的预设可能导致插件功能异常
 	 */
 	pluginsContext?: PluginsContextData;
+	/** 钩子 */
+	hooks?: RenderHooks;
 }
 
 /** 渲染参数 */
@@ -99,6 +125,18 @@ export interface RenderResult {
 //#region Prepare
 
 const PATTERN_WRAP = /\r\n?/g;
+const HOOKS_NAME: (keyof RenderHooks)[] = [
+	'prePreprocessing',
+	'postPreprocessing',
+	'preFrontmatter',
+	'postFrontmatter',
+	'preTokenize',
+	'preNormalize',
+	'postNormalize',
+	'postTokenize',
+	'preTransform',
+	'postTransform',
+];
 
 function resolveOptions(options?: RenderOptions): ResolvedRenderOptions {
 	const result: ResolvedRenderOptions = {
@@ -109,6 +147,7 @@ function resolveOptions(options?: RenderOptions): ResolvedRenderOptions {
 		slugifyStrategy: 'github',
 		context: {},
 		pluginsContext: {},
+		hooks: {},
 	};
 	if (NODE_TYPES.includes(options?.maxLevel!)) {
 		result.maxLevel = options?.maxLevel!;
@@ -136,6 +175,18 @@ function resolveOptions(options?: RenderOptions): ResolvedRenderOptions {
 	}
 	if (options?.pluginsContext && typeof options.pluginsContext === 'object') {
 		result.pluginsContext = options.pluginsContext;
+	}
+	if (options?.hooks && typeof options.hooks === 'object') {
+		for (const type of HOOKS_NAME) {
+			if (typeof options.hooks[type] === 'function') {
+				result.hooks[type] = options.hooks[type] as any;
+			}
+			if (Array.isArray(options.hooks[type])) {
+				result.hooks[type] = options.hooks[type].filter(
+					(v) => typeof v === 'function',
+				) as any;
+			}
+		}
 	}
 	return result;
 }
@@ -189,12 +240,17 @@ export async function render(
 	plugins: PluginsMap,
 	options?: RenderOptions,
 ): Promise<RenderResult> {
-	source = source.replace(PATTERN_WRAP, '\n');
 	const resolvedOptions = resolveOptions(options);
 	const context = await createRenderContext(plugins, resolvedOptions);
+	const hooks = resolvedOptions.hooks;
+
+	source = await execHooks(source, hooks.prePreprocessing);
+	source = source.replace(PATTERN_WRAP, '\n');
+	source = await execHooks(source, hooks.postPreprocessing);
 
 	let frontmatter: FrontmatterExtractResult | undefined = undefined;
 	if (resolvedOptions.enableFrontmatter) {
+		source = await execHooks(source, hooks.preFrontmatter);
 		frontmatter = await extractFrontmatter(
 			source,
 			resolvedOptions.enableFrontmatter === true
@@ -204,11 +260,14 @@ export async function render(
 		if (frontmatter) {
 			source = source.slice(frontmatter.raw.length + 1);
 		}
+		source = await execHooks(source, hooks.postFrontmatter);
 	}
 
-	const tokens = await tokenize(source, context, resolvedOptions);
+	let tokens = await tokenize(source, context, resolvedOptions, hooks);
 
-	const html = await transform(tokens, context);
+	tokens = await execHooks(tokens, hooks.preTransform);
+	let html = await transform(tokens, context);
+	html = await execHooks(html, hooks.postTransform);
 
 	return { ...omit(context, ['plugins']), frontmatter, tokens, html };
 }
