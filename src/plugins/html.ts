@@ -50,7 +50,7 @@ const PATTERN_START_TAG = /<([A-Za-z][A-Za-z\d:._-]*?)( .*?)?>/s;
 const PATTERN_END_TAG = /<\/([A-Za-z][A-Za-z\d:._-]*?)>/;
 const PATTERN_HEADING = /[Hh][1-6]/;
 // biome-ignore lint/suspicious/noControlCharactersInRegex: Explicitly match the character range allowed for attribute names
-const PATTERN_ATTR = /([^\s"'<>=/\u007F\u0000-\u001F]+?)(=["'])?/;
+const PATTERN_ATTR = /([^\s"'<>=/\u007F\u0000-\u001F]+)(=["'])?/;
 
 function getTagLength(html: string): number {
 	let state: 'INIT' | 'ATTR_SINGLE' | 'ATTR_DOUBLE' = 'INIT';
@@ -119,7 +119,7 @@ function findEndTag(html: string, tagName: string, strict?: boolean): number {
 
 function getIdPosition(html: string): [start: number, end: number] | undefined {
 	let state: '' | '"' | "'" = '';
-	let offset = 0;
+	let offset = (html.match(PATTERN_TAG_NAME)?.[0].length ?? 0) + 1;
 	let name: string | undefined = undefined;
 	let start = 0;
 	while (offset < html.length) {
@@ -186,7 +186,7 @@ function processHeading(
 	if (options?.shiftLevels) {
 		const shiftedLevel = Math.min(level + 1, 6);
 		start = start.slice(0, 2) + shiftedLevel + start.slice(3);
-		end = end.slice(0, 3) + shiftedLevel + start.slice(4);
+		end = end.slice(0, 3) + shiftedLevel + end.slice(4);
 	}
 	return [start, end];
 }
