@@ -29,6 +29,7 @@ export type { ImageParsed, ImageRefParsed } from './plugins/image';
 export type { ListParsed, TaskListParsed } from './plugins/list';
 export type { TableParsed } from './plugins/table';
 export type { TexParsed, TexOptions } from './plugins/tex';
+export type { HTMLRenderOptions, HTMLParsed } from './plugins/html';
 export type { Slugifier } from './anchor';
 export type {
 	RenderContext,
