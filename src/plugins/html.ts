@@ -171,7 +171,7 @@ function processHeading(
 	if (options?.disableHeadingSemantics) return [start, end];
 	if (!PATTERN_HEADING.test(tagName)) return [start, end];
 	const register = createHeadingRegister(options);
-	const level = parseInt(start[1]);
+	const level = parseInt(tagName[1]);
 	const idRange = getIdPosition(start);
 	let anchor: string | undefined = undefined;
 	if (idRange && (idRange?.[1] ?? 0) > 2) {
