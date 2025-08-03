@@ -101,6 +101,7 @@ EzalMarkdown 中各语法通过插件实现。
 | tex-dollar         | 0      | Tex `$$...$$`      |
 | tex-bracket        | 0      | Tex `\[...\]`      |
 | html               | 0      |                    |
+| html-comment       | 0      |                    |
 
 行级插件：
 | 名称            | 优先级 | 说明                     |
@@ -121,6 +122,7 @@ EzalMarkdown 中各语法通过插件实现。
 | tex-dollar      | 0      | Tex `$...$`              |
 | tex-bracket     | 0      | Tex `\(...\)`            |
 | html            | 0      |                          |
+| html-comment    | 0      |                          |
 | escape          | -1     | 转义字符                 |
 
 原子插件：

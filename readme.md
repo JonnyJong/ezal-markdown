@@ -101,6 +101,7 @@ Block Plugins:
 | tex-dollar         | 0        | Tex `$$...$$`        |
 | tex-bracket        | 0        | Tex `\[...\]`        |
 | html               | 0        |                      |
+| html-comment       | 0        |                      |
 
 Inline Plugins:
 | Name            | Priority | Description                                |
@@ -121,6 +122,7 @@ Inline Plugins:
 | tex-dollar      | 0        | Tex `$...$`                                |
 | tex-bracket     | 0        | Tex `\(...\)`                              |
 | html            | 0        |                                            |
+| html-comment    | 0        |                                            |
 | escape          | -1       | Escape characters                          |
 
 Atomic Plugins:

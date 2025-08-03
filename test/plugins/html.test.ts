@@ -94,3 +94,79 @@ describe('Plugin: html', () => {
 		expect(result.html).toEqual('<p>Line<br>break</p>');
 	});
 });
+
+describe('Plugin: html-comment', () => {
+	it('default', async () => {
+		const result = await EzalMarkdown.render('Before<!-- comment -->After');
+		expect(result.html).toEqual('<p>Before<!-- comment -->After</p>');
+	});
+
+	it('stripHtmlComments=true', async () => {
+		const renderer = new EzalMarkdown();
+		renderer.set(...plugins.html({ stripHtmlComments: true }));
+		const result = await renderer.render('Line1<!-- to be removed -->Line2');
+		expect(result.html).toEqual('<p>Line1Line2</p>');
+	});
+
+	it('parseCommentMarkdown=false (default)', async () => {
+		const result = await EzalMarkdown.render('<!-- *not* **parsed** -->');
+		expect(result.html).toEqual('<!-- *not* **parsed** -->');
+	});
+
+	it('parseCommentMarkdown=true', async () => {
+		const renderer = new EzalMarkdown();
+		renderer.set(...plugins.html({ parseCommentMarkdown: true }));
+		const result = await renderer.render('<!-- _italic_ __bold__ -->');
+		expect(result.html).toEqual('<!--<p> <i>italic</i> <b>bold</b> </p>-->');
+	});
+
+	it('combined stripHtmlComments and parseCommentMarkdown', async () => {
+		const renderer = new EzalMarkdown();
+		renderer.set(
+			...plugins.html({
+				stripHtmlComments: true,
+				parseCommentMarkdown: true,
+			}),
+		);
+		const result = await renderer.render('Text<!-- *content* -->');
+		expect(result.html).toEqual('<p>Text</p>');
+	});
+
+	it('multiline comments', async () => {
+		const renderer = new EzalMarkdown();
+		renderer.set(...plugins.html({ parseCommentMarkdown: true }));
+		const result = await renderer.render(`<!--
+# Heading
+* List item
+-->`);
+		expect(result.html).toEqual(
+			'<!--<h1 id="heading">Heading</h1><ul><li>List item</li></ul>-->',
+		);
+	});
+
+	it('comments with html tags', async () => {
+		const renderer = new EzalMarkdown();
+		renderer.set(
+			...plugins.html({
+				parseCommentMarkdown: true,
+				parseInnerMarkdown: true,
+			}),
+		);
+		const result = await renderer.render('<!-- <div>*test*</div> -->');
+		expect(result.html).toEqual('<!--<p> <div><i>test</i></div> </p>-->');
+	});
+
+	it('should not parse comments when stripHtmlComments=true regardless of parseCommentMarkdown', async () => {
+		const renderer = new EzalMarkdown();
+		renderer.set(
+			...plugins.html({
+				stripHtmlComments: true,
+				parseCommentMarkdown: true,
+			}),
+		);
+		const result = await renderer.render('<!-- **bold** -->');
+		expect(result.html).not.toContain('bold');
+		expect(result.html).not.toContain('<!--');
+		expect(result.html).not.toContain('-->');
+	});
+});

@@ -23,12 +23,36 @@ export interface HTMLRenderOptions extends HeadingRenderOptions {
 	 */
 	parseInnerMarkdown?: boolean;
 	/**
-	 * 是否严格匹配标签名大小写
+	 * 严格匹配标签名大小写
 	 * @description
 	 * - `true`：`<MyTag>` 必须对应 `</MyTag>`（严格匹配）
 	 * - `false`：不区分大小写（HTML 标准行为）
 	 */
 	strictTagCase?: boolean;
+	/**
+	 * 删除 HTML 注释
+	 * @description
+	 * - `true`：完全移除注释（包括注释标记）
+	 * - `false`：保留注释内容，原样输出
+	 *
+	 * @default false
+	 * @example
+	 * <!-- 注释内容 -->
+	 * false 时保留，true 时整个移除
+	 */
+	stripHtmlComments?: boolean;
+	/**
+	 * 解析 HTML 注释内的 Markdown 内容
+	 * @description
+	 * - `true`：尝试解析注释内容中的 Markdown 语法
+	 * - `false`：保持注释内容原样
+	 *
+	 * @default false
+	 * @example
+	 * <!-- *italic* **bold** -->
+	 * true 时会尝试解析为斜体和粗体
+	 */
+	parseCommentMarkdown?: boolean;
 }
 
 export interface HTMLParsed {
@@ -51,6 +75,9 @@ const PATTERN_END_TAG = /<\/([A-Za-z][A-Za-z\d:._-]*?)>/;
 const PATTERN_HEADING = /[Hh][1-6]/;
 // biome-ignore lint/suspicious/noControlCharactersInRegex: Explicitly match the character range allowed for attribute names
 const PATTERN_ATTR = /([^\s"'<>=/\u007F\u0000-\u001F]+)(=["'])?/;
+const PATTERN_COMMENT_BLOCK_START = /(?<=^|\n)<!--/;
+const PATTERN_COMMENT_INLINE_START = '<!--';
+const PATTERN_COMMENT_END = '-->';
 
 function getTagLength(html: string): number {
 	let state: 'INIT' | 'ATTR_SINGLE' | 'ATTR_DOUBLE' = 'INIT';
@@ -251,6 +278,32 @@ export function html(
 			content: options?.parseInnerMarkdown ? undefined : content,
 		};
 	}
+	function parseComment(source: string, { logger }: PluginContext): HTMLParsed {
+		let raw: string;
+		let content: string;
+		let end: string;
+		const index = source.indexOf(PATTERN_COMMENT_END);
+		if (index === -1) {
+			logger.warn(
+				`Missing end for HTML comment: "${source.slice(0, 32)}${source.length > 32 ? '...' : ''}"`,
+			);
+			raw = source;
+			content = source.slice(PATTERN_COMMENT_INLINE_START.length);
+			end = '';
+		} else {
+			raw = source.slice(0, index + PATTERN_COMMENT_END.length);
+			content = source.slice(PATTERN_COMMENT_INLINE_START.length, index);
+			end = PATTERN_COMMENT_END;
+		}
+		if (options?.stripHtmlComments) return { raw, start: '' };
+		return {
+			raw,
+			children: options?.parseCommentMarkdown ? md(content) : undefined,
+			start: PATTERN_COMMENT_INLINE_START,
+			end,
+			content: options?.parseCommentMarkdown ? undefined : content,
+		};
+	}
 	return [
 		{
 			name: 'html',
@@ -266,6 +319,22 @@ export function html(
 			priority: 0,
 			start: PATTERN_INLINE_START,
 			parse,
+			render,
+		},
+		{
+			name: 'html-comment',
+			type: 'block',
+			priority: 0,
+			start: PATTERN_COMMENT_BLOCK_START,
+			parse: parseComment,
+			render,
+		},
+		{
+			name: 'html-comment',
+			type: 'inline',
+			priority: 0,
+			start: PATTERN_COMMENT_INLINE_START,
+			parse: parseComment,
 			render,
 		},
 	];
