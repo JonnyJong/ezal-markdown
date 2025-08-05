@@ -1,5 +1,14 @@
 export type PromiseOr<T> = T | Promise<T>;
 export type ArrayOr<T> = T | T[];
+export type SafeAny =
+	| { [k: string | number | symbol]: SafeAny }
+	| string
+	| number
+	| bigint
+	| boolean
+	| symbol
+	| null
+	| undefined;
 
 export function mergeMap<K, V>(target: Map<K, V>, source: Map<K, V>) {
 	for (const [k, v] of source) {

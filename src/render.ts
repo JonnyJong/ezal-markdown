@@ -9,7 +9,7 @@ import { PluginContextMap, PluginsContextData, PluginsMap } from './plugin';
 import { Toc } from './toc';
 import { NODE_TYPES, Node, NodeType, TokenizeOptions, tokenize } from './token';
 import { transform } from './transform';
-import { RenderHook, execHooks, omit } from './utils';
+import { RenderHook, SafeAny, execHooks, omit } from './utils';
 
 //#region Define
 
@@ -56,7 +56,7 @@ export interface RenderContext {
 	/** 插件及上下文 */
 	readonly plugins: PluginContextMap;
 	/** 插件间共享上下文 */
-	readonly shared: Record<string, unknown>;
+	readonly shared: Record<string, SafeAny>;
 	/** 锚 */
 	readonly anchors: Anchors;
 	/** 目录 */
