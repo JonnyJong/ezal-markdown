@@ -4,6 +4,9 @@
 		"target": "esnext",
 		"module": "esnext",
 		"moduleResolution": "bundler",
+		"lib": [
+			"ESNext"
+		],
 		// Checking
 		"strict": true,
 		"noImplicitAny": true,
@@ -28,6 +31,7 @@
 		"removeComments": false,
 		"newLine": "lf",
 		"declaration": true,
+		"outDir": "dist"
 	},
 	"include": [
 		"src/**/*",

@@ -87,7 +87,8 @@
 				"useAwait": "warn",
 				"useErrorMessage": "error",
 				"noExplicitAny": "off",
-				"noGlobalIsNan": "off"
+				"noGlobalIsNan": "off",
+				"noControlCharactersInRegex": "info"
 			}
 		}
 	},

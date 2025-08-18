@@ -61,7 +61,7 @@ export async function extractFrontmatter(
 	const begin = source.match(PATTERN_BEGIN);
 	if (!begin) return;
 	const delimiterLength = begin[0].length - 1;
-	const end = source.match(new RegExp(`(?<=\n)-{${delimiterLength},}(?=\n|$)`));
+	const end = source.match(new RegExp(`(?<=\n)-{${delimiterLength},}(\n|$)`));
 	if (!end) return;
 
 	const raw = source.slice(0, end.index! + end[0].length);

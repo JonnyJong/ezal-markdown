@@ -1,103 +1,30 @@
-import {
-	BlockParseResult,
-	InlineParseResult,
-	ParseChild,
-	Plugin,
-	md,
-} from '../plugin';
-import { $, escapeHTML, normalizeIndent } from '../utils';
+import { CommonPlugin, Parsed } from '../types';
+import { $ } from '../utils';
 
-export interface CodeParsed extends InlineParseResult {
+export interface CodeParsed extends Parsed {
 	code: string;
 }
 
-const PATTERN_CODE = /(`{1,2})(.+?)\1/;
+const PATTERN = /(?<!`)(`+)([^`]|[^`].*?[^`])\1(?!`)/s;
+const PATTERN_WRAP = /^ +(.*[^ ]|[^ ].*) +$/;
 
-export const code: Plugin<'inline', CodeParsed> = {
+/** @see https://spec.commonmark.org/0.31.2/#code-spans */
+export const code: CommonPlugin<'inline', CodeParsed> = {
 	name: 'code',
 	type: 'inline',
+	order: 0,
 	priority: 0,
-	start: PATTERN_CODE,
+	start: PATTERN,
 	parse(source) {
-		const matched = source.match(PATTERN_CODE);
+		const matched = source.match(PATTERN);
 		if (!matched) return;
-		return { raw: matched[0], code: matched[2] };
+		const raw = matched[0];
+		let code = raw.slice(matched[1].length, -matched[1].length);
+		code = code.replaceAll('\n', ' ');
+		if (PATTERN_WRAP.test(code)) code = code.slice(1, -1);
+		return { raw, code };
 	},
-	render(source, { counter }) {
-		counter.count(source.raw);
-		return $('code', { content: source.code });
+	render({ code }) {
+		return $('code', { content: code });
 	},
 };
-
-export interface CodeblockParsed extends BlockParseResult {
-	children?: ParseChild;
-	code: string;
-	lang?: string;
-}
-
-const PATTERN_CODEBLOCK = /(^|(?<=\n))( {4}|\t)(.*)(\n(\2)(.*))*/;
-const PATTERN_CODEBLOCK_FENCED = /(?<=^|\n)(`{3,}|~{3,})(.*?)\n(.*?)\n\1/s;
-
-type CodeHighlighter = (
-	code: string,
-	lang?: string,
-) =>
-	| { html: string; className?: string }
-	| Promise<{ html: string; className?: string }>;
-
-const DEFAULT_HIGHLIGHTER: CodeHighlighter = (code) => {
-	return { html: escapeHTML(code) };
-};
-
-export function codeblock(
-	highlighter: CodeHighlighter = DEFAULT_HIGHLIGHTER,
-): Plugin<'block', CodeblockParsed>[] {
-	return [
-		{
-			name: 'codeblock',
-			type: 'block',
-			priority: 0,
-			start: PATTERN_CODEBLOCK,
-			parse(source) {
-				const raw = source.match(PATTERN_CODEBLOCK)?.[0];
-				if (!raw) return;
-				const code = normalizeIndent(raw.trimStart());
-				return { raw, code };
-			},
-			async render(source, { counter }) {
-				counter.count(source.code);
-				const { html, className } = await highlighter(source.code, source.lang);
-				return $('pre', { class: className, html: $('code', html) });
-			},
-		},
-		{
-			name: 'codeblock-fenced',
-			type: 'block',
-			priority: 0,
-			start: PATTERN_CODEBLOCK_FENCED,
-			parse(source) {
-				const matched = source.match(PATTERN_CODEBLOCK_FENCED);
-				if (!matched) return;
-				let lang: string | undefined = matched[2];
-				let info: string | undefined = undefined;
-				const index = lang.indexOf(' ');
-				if (index !== -1) {
-					info = lang.slice(index + 1);
-					lang = lang.slice(0, index);
-				}
-				if (!lang) lang = undefined;
-				return {
-					raw: matched[0],
-					code: matched[3],
-					lang,
-					children: info ? md(info, { maxLevel: 'inline' }) : undefined,
-				};
-			},
-			async render(source, { counter }) {
-				counter.count(source.code);
-				const { html, className } = await highlighter(source.code, source.lang);
-				return $('pre', { class: className, html: $('code', html) });
-			},
-		},
-	];
-}

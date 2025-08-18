@@ -1,6 +1,59 @@
 import { describe, expect, it } from 'vitest';
-import { mapChildren, mergeMap, omit } from '../src/utils';
+import type { Nested } from '../src/types';
+import {
+	eachLine,
+	indentSizeOf,
+	mergeMap,
+	mutateNested,
+	omit,
+	reduceIndent,
+	stackSafeRecursion,
+} from '../src/utils';
 
+//#region mutateNested
+describe('Utils: mutateNested', () => {
+	it('convert Nested<string> to Nested<number>', async () => {
+		const data: Nested<string> = {
+			str: 'Ipsum',
+			arr: ['amet', 'sanctus', { sadipscing: 'sit' }, 'erat'],
+		};
+		const result = await mutateNested<string, number>(
+			data,
+			(v) => typeof v === 'string',
+			(v) => v.length,
+		);
+		expect(result).toEqual({
+			str: 5,
+			arr: [4, 7, { sadipscing: 3 }, 4],
+		});
+	});
+
+	it('keep other values', async () => {
+		const symbol = Symbol();
+		const data = [1, symbol, 2] as Nested<any>;
+		const result = await mutateNested<number, number>(
+			data,
+			(v) => typeof v === 'number',
+			(v) => v,
+		);
+		expect(result).toEqual([1, symbol, 2]);
+	});
+
+	it('keep the original reference', async () => {
+		const data: Nested<string> = {
+			str: 'Ipsum',
+			arr: ['amet', 'sanctus', { sadipscing: 'sit' }, 'erat'],
+		};
+		const result = await mutateNested<string, number>(
+			data,
+			(v) => typeof v === 'string',
+			(v) => v.length,
+		);
+		expect(result).toBe(data);
+	});
+});
+
+//#region mergeMap
 describe('Utils: mergeMap', () => {
 	it('should merge two maps with different keys', () => {
 		const target = new Map([
@@ -122,131 +175,7 @@ describe('Utils: mergeMap', () => {
 	});
 });
 
-describe('Utils: mapChildren', () => {
-	// 测试验证函数
-	const isNumber = (value: unknown): value is number =>
-		typeof value === 'number';
-	const isString = (value: unknown): value is string =>
-		typeof value === 'string';
-
-	// 简单转换函数
-	const double = (n: number) => n * 2;
-	const toUpper = (s: string) => s.toUpperCase();
-
-	it('should transform a single primitive value', async () => {
-		const result = await mapChildren(5, isNumber, double);
-		expect(result).toBe(10);
-	});
-
-	it('should transform an array of values', async () => {
-		const result = await mapChildren([1, 2, 3], isNumber, double);
-		expect(result).toEqual([2, 4, 6]);
-	});
-
-	it('should transform an object with values', async () => {
-		const result = await mapChildren({ a: 1, b: 2 }, isNumber, double);
-		expect(result).toEqual({ a: 2, b: 4 });
-	});
-
-	it('should handle nested arrays', async () => {
-		const result = await mapChildren([1, [2, [3, 4]]], isNumber, double);
-		expect(result).toEqual([2, [4, [6, 8]]]);
-	});
-
-	it('should handle nested objects', async () => {
-		const input = {
-			a: 1,
-			b: {
-				c: 2,
-				d: {
-					e: 3,
-				},
-			},
-		};
-		const result = await mapChildren(input, isNumber, double);
-		expect(result).toEqual({
-			a: 2,
-			b: {
-				c: 4,
-				d: {
-					e: 6,
-				},
-			},
-		});
-	});
-
-	it('should handle mixed arrays and objects', async () => {
-		const input = {
-			a: [1, 2],
-			b: {
-				c: [3, { d: 4 }],
-			},
-		};
-		const result = await mapChildren(input, isNumber, double);
-		expect(result).toEqual({
-			a: [2, 4],
-			b: {
-				c: [6, { d: 8 }],
-			},
-		});
-	});
-
-	it('should handle different value types', async () => {
-		const input = {
-			numbers: [1, 2],
-			strings: ['a', 'b'],
-			mixed: [3, 'c'],
-		};
-
-		// 只转换数字
-		const numberResult = await mapChildren(input as any, isNumber, double);
-		expect(numberResult).toEqual({
-			numbers: [2, 4],
-			strings: ['a', 'b'],
-			mixed: [6, 'c'],
-		});
-
-		// 只转换字符串
-		const stringResult = await mapChildren(input as any, isString, toUpper);
-		expect(stringResult).toEqual({
-			numbers: [1, 2],
-			strings: ['A', 'B'],
-			mixed: [3, 'C'],
-		});
-	});
-
-	it('should handle empty structures', async () => {
-		expect(await mapChildren([], isNumber, double)).toEqual([]);
-		expect(await mapChildren({}, isNumber, double)).toEqual({});
-	});
-
-	it('should handle async transformer', async () => {
-		const asyncDouble = async (n: number) => {
-			await new Promise((resolve) => setTimeout(resolve, 10));
-			return n * 2;
-		};
-
-		const result = await mapChildren([1, 2, 3], isNumber, asyncDouble);
-		expect(result).toEqual([2, 4, 6]);
-	});
-
-	it('should preserve non-matching values', async () => {
-		const input = {
-			a: 1,
-			b: 'two',
-			c: true,
-			d: null,
-		};
-		const result = await mapChildren(input as any, isNumber, double);
-		expect(result).toEqual({
-			a: 2,
-			b: 'two',
-			c: true,
-			d: null,
-		});
-	});
-});
-
+//#region omit
 describe('Utils: omit', () => {
 	it('should omit specified keys from object', () => {
 		const obj = { a: 1, b: 2, c: 3 };
@@ -299,5 +228,94 @@ describe('Utils: omit', () => {
 		expect(result.active).toBe(true);
 		// @ts-expect-error - age should be omitted
 		expect(result.age).toBeUndefined();
+	});
+});
+
+describe('Utils: stackSafeRecursion', () => {
+	it('should handle deep recursion without stack overflow', async () => {
+		const getSyncDepth = (i: number) => {
+			try {
+				return getSyncDepth(i + 1);
+			} catch {
+				return i;
+			}
+		};
+		const deepRecursive = stackSafeRecursion<[number, number], number>(
+			(rec, depth, acc) => {
+				if (depth <= 0) return acc;
+				return rec(depth - 1, acc + 1);
+			},
+		);
+		const depth = getSyncDepth(0) * 2;
+		const result = await deepRecursive(depth, 0);
+		expect(result).toBe(depth);
+	}, 3000);
+	it('should work with fibonacci sequence', async () => {
+		const fib = stackSafeRecursion<[number], number>(async (rec, n) => {
+			if (n <= 1) return n;
+			const [a, b] = await Promise.all([rec(n - 1), rec(n - 2)]);
+			return a + b;
+		});
+		expect(await fib(10)).toBe(55);
+	});
+	it('should work with factorial', async () => {
+		const factorial = stackSafeRecursion<[number], number>(async (rec, n) => {
+			if (n <= 1) return 1;
+			return n * (await rec(n - 1));
+		});
+		expect(await factorial(5)).toBe(120);
+		expect(await factorial(10)).toBe(3628800);
+	});
+});
+
+describe('Utils: indentSizeOf', () => {
+	it('spaces only', () => {
+		expect(indentSizeOf('  ')).toBe(2);
+	});
+	it('tab only', () => {
+		expect(indentSizeOf('\t')).toBe(4);
+	});
+	it('mixed', () => {
+		expect(indentSizeOf(' \t ')).toBe(6);
+	});
+	it('empty', () => {
+		expect(indentSizeOf('')).toBe(0);
+		expect(indentSizeOf('\n')).toBe(0);
+	});
+});
+
+describe('Utils: reduceIndent', () => {
+	it('spaces only', () => {
+		expect(reduceIndent('     a', 4)).toBe(' a');
+	});
+	it('tab only', () => {
+		expect(reduceIndent('\t a', 4)).toBe(' a');
+	});
+	it('mixed', () => {
+		expect(reduceIndent('  \t a', 4)).toBe(' a');
+	});
+	it('not enough', () => {
+		expect(reduceIndent('a', 4)).toBe('a');
+		expect(reduceIndent(' a', 4)).toBe('a');
+		expect(reduceIndent('  a', 4)).toBe('a');
+		expect(reduceIndent('   a', 4)).toBe('a');
+	});
+});
+
+describe('Utils: eachLine', () => {
+	it('empty', () => {
+		expect([...eachLine('')]).toEqual([['', '']]);
+	});
+	it('two empty line', () => {
+		expect([...eachLine('\n')]).toEqual([
+			['\n', '\n'],
+			['', ''],
+		]);
+	});
+	it('normal', () => {
+		expect([...eachLine('Hello\nworld!')]).toEqual([
+			['Hello\n', 'Hello\nworld!'],
+			['world!', 'world!'],
+		]);
 	});
 });

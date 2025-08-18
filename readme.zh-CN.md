@@ -140,7 +140,7 @@ interface Shared {
 	/** 脚注引用 */
 	footnote: Record<string, string>;
 	/** 链接引用 */
-	links: Record<string, { url: string, title?: string }>;
+	links: Record<string, { href: string, title?: string }>;
 }
 ```
 

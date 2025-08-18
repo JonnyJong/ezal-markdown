@@ -24,7 +24,8 @@ list:
   - B
   - C
 number: 123
----`,
+---
+`,
 	data: {
 		title: 'Title Here',
 		json: { json: 'data' },
@@ -46,7 +47,8 @@ const RESULT_MULTI: FrontmatterExtractResult = {
 title: doc1
 ---
 title: doc2
------`,
+-----
+`,
 	data: { title: 'doc1' },
 	content: [{ title: 'doc1' }, { title: 'doc2' }],
 	errors: undefined,

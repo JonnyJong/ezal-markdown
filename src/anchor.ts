@@ -1,19 +1,13 @@
 export type Slugifier = (name: string) => string;
 
-const PATTERN_SYMBOLS = /[\p{P}\s]+/gu;
-const PATTERN_TRIM = /^-|-$/g;
 const PATTERN_WHITESPACE = /\s+/g;
 const PATTERN_PUNCTUATORS =
 	/[\][!/'"#$%&()*+,./:;<=>?@\\^{|}~`。，、；：？！…—·ˉ¨‘’“”々～‖∶＂＇｀｜〃〔〕〈〉《》「」『』．〖〗【】（）［］｛｝]/g;
+const PATTERN_TRIM = /^-|-$/g;
+const PATTERN_SYMBOLS = /[\p{P}\p{S}\s]+/gu;
 const PATTERN_TRAILING = /-(\d)+$/;
 
 const SLUGIFY = {
-	aggressive: (name) =>
-		name
-			.trim()
-			.replace(PATTERN_SYMBOLS, '-')
-			.replace(PATTERN_TRIM, '')
-			.toLowerCase(),
 	github: (name) =>
 		name
 			.trim()
@@ -21,6 +15,12 @@ const SLUGIFY = {
 			.replace(PATTERN_WHITESPACE, '-')
 			.replace(PATTERN_PUNCTUATORS, '')
 			.replace(PATTERN_TRIM, ''),
+	aggressive: (name) =>
+		name
+			.trim()
+			.replace(PATTERN_SYMBOLS, '-')
+			.replace(PATTERN_TRIM, '')
+			.toLowerCase(),
 } as const satisfies Record<string, Slugifier>;
 
 function parse(slug: string): [slug: string, count: number] | undefined {

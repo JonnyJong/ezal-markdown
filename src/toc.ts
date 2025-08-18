@@ -54,7 +54,7 @@ export class Toc {
 	toMarkdown() {
 		return this.#items
 			.map(({ name, anchor, level }) => {
-				return `${'\t'.repeat(level - 1)}- [${name}](#${anchor})`;
+				return `${'  '.repeat(level - 1)}- [${name}](#${anchor})`;
 			})
 			.join('\n');
 	}

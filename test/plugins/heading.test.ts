@@ -1,79 +1,111 @@
+/** @see https://spec.commonmark.org/0.31.2/#atx-headings */
+
 import { describe, expect, it } from 'vitest';
-import { EzalMarkdown, plugins } from '../../src';
+import { EzalMarkdown } from '../../src';
+import { heading } from '../../src/plugins/heading';
+import { ASTLikeNode, initAstMatcher } from '../ast';
 
-describe('Plugin: heading', () => {
-	it('default', async () => {
-		const result = await EzalMarkdown.render('### My Great Heading');
-		expect(result.html).toEqual(
-			'<h3 id="my-great-heading">My Great Heading</h3>',
-		);
-	});
+initAstMatcher();
 
-	it('custom id', async () => {
-		const result = await EzalMarkdown.render('### My Great Heading {#custom-id}');
-		expect(result.html).toEqual('<h3 id="custom-id">My Great Heading</h3>');
-	});
-
-	it('with shiftLevels', async () => {
+describe('Plugin: atx-heading', () => {
+	it('shiftLevels', async () => {
+		const md = `# foo
+## foo
+### foo
+#### foo
+##### foo
+###### foo`;
+		const ast: ASTLikeNode = [
+			'document',
+			[
+				['atx-heading', { level: 2 }],
+				['#item', 'foo'],
+			],
+			[
+				['atx-heading', { level: 3 }],
+				['#item', 'foo'],
+			],
+			[
+				['atx-heading', { level: 4 }],
+				['#item', 'foo'],
+			],
+			[
+				['atx-heading', { level: 5 }],
+				['#item', 'foo'],
+			],
+			[
+				['atx-heading', { level: 6 }],
+				['#item', 'foo'],
+			],
+			[
+				['atx-heading', { level: 6 }],
+				['#item', 'foo'],
+			],
+		];
 		const renderer = new EzalMarkdown();
-		renderer.set(...plugins.heading({ shiftLevels: true }));
-		const result = await renderer.render('# Level 1\n## Level 2\n### Level 3');
-		expect(result.html).toEqual(
-			'<h2 id="level-1">Level 1</h2><h3 id="level-2">Level 2</h3><h4 id="level-3">Level 3</h4>',
-		);
+		renderer.set(heading({ shiftLevels: true }));
+		const result = await renderer.parse(md);
+		expect(result.document).toLikeAst(ast);
 	});
 
-	it('with anchorPrefix only', async () => {
+	it('anchorPrefix', async () => {
+		const md = '# bar';
+		const ast: ASTLikeNode = [
+			'document',
+			[
+				['atx-heading', { anchor: 'foo-bar' }],
+				['#item', 'bar'],
+			],
+		];
 		const renderer = new EzalMarkdown();
-		renderer.set(...plugins.heading({ anchorPrefix: 'heading-' }));
-		const result = await renderer.render('# Title\n## Subtitle');
-		expect(result.html).toEqual(
-			'<h1 id="heading-title">Title</h1><h2 id="heading-subtitle">Subtitle</h2>',
-		);
+		renderer.set(heading({ anchorPrefix: 'foo-' }));
+		const result = await renderer.parse(md);
+		expect(result.document).toLikeAst(ast);
 	});
 
-	it('with anchorPrefix and applyAnchorPrefixToCustomId=false', async () => {
+	it('enableCustomId', async () => {
+		const md = `# foo
+## bar {#bar-baz}`;
+		const ast: ASTLikeNode = [
+			'document',
+			[
+				['atx-heading', { anchor: 'foo' }],
+				['#item', 'foo'],
+			],
+			[
+				['atx-heading', { anchor: 'bar-baz' }],
+				['#item', 'bar'],
+			],
+		];
+		const renderer = new EzalMarkdown();
+		renderer.set(heading({ enableCustomId: true }));
+		const result = await renderer.parse(md);
+		expect(result.document).toLikeAst(ast);
+	});
+
+	it('applyAnchorPrefixToCustomId', async () => {
+		const md = `# foo
+## bar {#bar-baz}`;
+		const ast: ASTLikeNode = [
+			'document',
+			[
+				['atx-heading', { anchor: 'foo-foo' }],
+				['#item', 'foo'],
+			],
+			[
+				['atx-heading', { anchor: 'foo-bar-baz' }],
+				['#item', 'bar'],
+			],
+		];
 		const renderer = new EzalMarkdown();
 		renderer.set(
-			...plugins.heading({
-				anchorPrefix: 'prefix-',
-				applyAnchorPrefixToCustomId: false,
-			}),
-		);
-		const result = await renderer.render('# Title\n## Subtitle {#custom-sub}');
-		expect(result.html).toEqual(
-			'<h1 id="prefix-title">Title</h1><h2 id="custom-sub">Subtitle</h2>',
-		);
-	});
-
-	it('with anchorPrefix and applyAnchorPrefixToCustomId=true', async () => {
-		const renderer = new EzalMarkdown();
-		renderer.set(
-			...plugins.heading({
-				anchorPrefix: 'prefix-',
+			heading({
+				enableCustomId: true,
 				applyAnchorPrefixToCustomId: true,
+				anchorPrefix: 'foo-',
 			}),
 		);
-		const result = await renderer.render('# Title\n## Subtitle {#custom-sub}');
-		expect(result.html).toEqual(
-			'<h1 id="prefix-title">Title</h1><h2 id="prefix-custom-sub">Subtitle</h2>',
-		);
-	});
-
-	it('with all options', async () => {
-		const renderer = new EzalMarkdown();
-		renderer.set(
-			...plugins.heading({
-				shiftLevels: true,
-				anchorPrefix: 'sec-',
-				applyAnchorPrefixToCustomId: true,
-			}),
-		);
-		const result = await renderer.render(
-			'# Main\n## Section {#s1}\n### Subsection',
-		);
-		expect(result.html).toEqual(
-			'<h2 id="sec-main">Main</h2><h3 id="sec-s1">Section</h3><h4 id="sec-subsection">Subsection</h4>',
-		);
+		const result = await renderer.parse(md);
+		expect(result.document).toLikeAst(ast);
 	});
 });
