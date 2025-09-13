@@ -30,6 +30,6 @@ export default defineConfig([
 			file: 'dist/types.d.ts',
 		},
 		plugins: [dts()],
-		external,
+		external: () => true,
 	},
 ]);
