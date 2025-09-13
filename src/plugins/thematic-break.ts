@@ -4,7 +4,10 @@ import { $ } from '../utils';
 export const PATTERN_THEMATIC_BREAK =
 	/(?<=^|\n) {0,3}([*\-_])[ \t]*(\1[ \t]*){2,}(?=$|\n)/;
 
-/** @see https://spec.commonmark.org/0.31.2/#thematic-breaks */
+/**
+ * 主题分隔符
+ * @see https://spec.commonmark.org/0.31.2/#thematic-breaks
+ */
 export const thematicBreak: CommonPlugin<'block'> = {
 	name: 'thematic-break',
 	type: 'block',

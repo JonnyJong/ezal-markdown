@@ -2,11 +2,14 @@ import { CommonPlugin, Parsed } from '../types';
 import { $ } from '../utils';
 
 export interface AutoLinkParsed extends Parsed {
+	/** 链接目的地 */
 	destination: string;
+	/** 链接文本 */
 	text: string;
 }
 
 export type LinkTarget = 'self' | 'blank' | 'parent' | 'top' | undefined;
+/** 链接目标解析器 */
 export type LinkTargetResolver = (link: string) => LinkTarget;
 
 const PATTERN_LINK = /<[A-Za-z][A-Za-z\d+.-]*:[^\u0000-\u001F\u007F <>]*>/;
@@ -17,7 +20,10 @@ const PATTERN_ABSOLUTE_LINK = /^[a-z][a-z0-9+.-]*:|^\/\//;
 export const DEFAULT_RESOLVER: LinkTargetResolver = (link) =>
 	PATTERN_ABSOLUTE_LINK.test(link) ? 'blank' : undefined;
 
-/** @see https://spec.commonmark.org/0.31.2/#autolinks */
+/**
+ * 自动链接
+ * @see https://spec.commonmark.org/0.31.2/#autolinks
+ */
 export function autolink(
 	targetResolver: LinkTargetResolver = DEFAULT_RESOLVER,
 ): CommonPlugin<'inline', AutoLinkParsed> {

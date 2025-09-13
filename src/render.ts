@@ -2,12 +2,17 @@ import { Document, Node, ParsedChild, ParsedNode, Text } from './node';
 import { Context, ResolvedOptions } from './types';
 
 export interface HTMLRenderResult {
+	/** 选项 */
 	options: ResolvedOptions;
+	/** 根节点 */
 	root: Node;
+	/** 上下文 */
 	context: Context;
+	/** HTML 渲染结果 */
 	html: string;
 }
 
+/** 后序遍历 */
 function* postOrderTraversal(root: Node): Generator<Node, void, void> {
 	let node: Node | null = root;
 	while (node) {
@@ -47,6 +52,11 @@ function errInfo(node: Node) {
 	return `Could not fount renderer/common plugin for ${node.type} node call ${node.name}`;
 }
 
+/**
+ * 渲染为 HTML
+ * @param root 渲染根节点
+ * @param options 选项
+ */
 export async function renderHTML(
 	root: Node,
 	options: ResolvedOptions,
@@ -64,7 +74,7 @@ export async function renderHTML(
 			node.html = await context.plugin.render(
 				{ ...node.data, raw: node.raw, children: node.children },
 				context,
-				options,
+				node.resolveOptions(),
 			);
 			continue;
 		}
@@ -80,7 +90,7 @@ export async function renderHTML(
 			node.html = await textRenderer.plugin.render(
 				{ raw: node.raw },
 				textRenderer,
-				options,
+				node.resolveOptions(),
 			);
 			continue;
 		}

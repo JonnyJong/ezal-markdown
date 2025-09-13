@@ -89,7 +89,10 @@ function parse(root: Node) {
 	}
 }
 
-/** @see https://spec.commonmark.org/0.31.2/#paragraphs */
+/**
+ * 段落
+ * @see https://spec.commonmark.org/0.31.2/#paragraphs
+ */
 export const paragraph: ASTPlugin<'block', Paragraph> = {
 	name: 'paragraph',
 	type: 'block',

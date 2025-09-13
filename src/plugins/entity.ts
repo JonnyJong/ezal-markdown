@@ -3,13 +3,18 @@ import { CommonPlugin, Parsed } from '../types';
 import { escapeHTML } from '../utils';
 
 export interface CharReferenceParsed extends Parsed {
+	/** 字符 */
 	char: string;
+	/** 有效性 */
 	valid: boolean;
 }
 
 const PATTERN_ENTITY = /&[A-Za-z][A-Za-z0-9]*;/;
 
-/** @see https://spec.commonmark.org/0.31.2/#entity-references */
+/**
+ * 实体引用
+ * @see https://spec.commonmark.org/0.31.2/#entity-references
+ */
 export const entityReference: CommonPlugin<'inline', CharReferenceParsed> = {
 	name: 'entity-reference',
 	type: 'inline',
@@ -39,7 +44,10 @@ function parseCodePoint(code: number): [char: string, valid: boolean] {
 
 const PATTERN_DEC = /&#[0-9]{1,7};/;
 
-/** @see https://spec.commonmark.org/0.31.2/#decimal-numeric-character-references */
+/**
+ * 十进制字符引用
+ * @see https://spec.commonmark.org/0.31.2/#decimal-numeric-character-references
+ */
 export const decimalCharReference: CommonPlugin<'inline', CharReferenceParsed> =
 	{
 		name: 'decimal-character-reference',
@@ -61,7 +69,10 @@ export const decimalCharReference: CommonPlugin<'inline', CharReferenceParsed> =
 
 const PATTERN_HEX = /&#[Xx][A-Za-z0-9]{1,6};/;
 
-/** @see https://spec.commonmark.org/0.31.2/#hexadecimal-numeric-character-references */
+/**
+ * 十六进制字符引用
+ * @see https://spec.commonmark.org/0.31.2/#hexadecimal-numeric-character-references
+ */
 export const hexadecimalCharReference: CommonPlugin<
 	'inline',
 	CharReferenceParsed

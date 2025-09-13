@@ -12,9 +12,13 @@ import {
 import { entiresNested, mergeMap } from './utils';
 
 export interface PluginLogger {
+	/** 输出调试日志 */
 	debug(message: string, errObj?: unknown): void;
+	/** 输出一般日志 */
 	info(message: string, errObj?: unknown): void;
+	/** 输出警告日志 */
 	warn(message: string, errObj?: unknown): void;
+	/** 输出错误日志 */
 	error(message: string, errObj?: unknown): void;
 }
 
@@ -311,6 +315,7 @@ export class PluginContextMap {
 			}
 		}
 	}
+	/** 初始化插件 */
 	async init(data?: PluginsContextData) {
 		for (const type of NODE_TYPES) {
 			const map = new Map<number, CommonPluginContext<typeof type>[]>();
@@ -355,18 +360,21 @@ export class PluginContextMap {
 			}
 		}
 	}
+	/** 按阶段获取插件 */
 	fetch<T extends NodeType, S extends 0 | 1 | 2>(
 		type: T,
 		state: S,
 	): OrderedPlugins<T>[S] {
 		return this.#map[type][1][state];
 	}
+	/** 获取渲染/普通插件 */
 	get<T extends NodeType>(
 		type: T,
 		name: string,
 	): RendererPluginContext<T> | CommonPluginContext<T> | undefined {
 		return this.#map[type][3].get(name);
 	}
+	/** 遍历 AST 插件 */
 	*entiresAst<T extends NodeType>(type: T): Generator<ASTPluginContext<T>> {
 		for (const context of this.#map[type][2]) {
 			yield context;

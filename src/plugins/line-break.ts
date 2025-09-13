@@ -4,7 +4,10 @@ import { $ } from '../utils';
 const PATTERN_HARD = /( {2,}|\\)\n/;
 const PATTERN_SOFT = / {0,1}\n/;
 
-/** @see https://spec.commonmark.org/0.31.2/#hard-line-breaks */
+/**
+ * 硬换行
+ * @see https://spec.commonmark.org/0.31.2/#hard-line-breaks
+ */
 export const linebreak: CommonPlugin<'inline'> = {
 	name: 'linebreak',
 	type: 'inline',
@@ -21,7 +24,10 @@ export const linebreak: CommonPlugin<'inline'> = {
 	},
 };
 
-/** @see https://spec.commonmark.org/0.31.2/#soft-line-breaks */
+/**
+ * 软换行
+ * @see https://spec.commonmark.org/0.31.2/#soft-line-breaks
+ */
 export const softbreak: CommonPlugin<'inline'> = {
 	name: 'softbreak',
 	type: 'inline',

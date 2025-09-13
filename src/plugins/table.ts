@@ -7,7 +7,13 @@ import { PATTERN_LIST_START } from './list';
 type Align = 'left' | 'center' | 'right' | undefined;
 
 export interface TableParsed extends Parsed {
-	children: { head: ParsedChild[]; body: ParsedChild[][] };
+	children: {
+		/** 表头 */
+		head: ParsedChild[];
+		/** 表格内容 */
+		body: ParsedChild[][];
+	};
+	/** 对齐 */
 	align: Align[];
 }
 
@@ -18,6 +24,7 @@ const PATTERN_START =
 const PATTERN_DELIMITER = /(\\)*\|/;
 const PATTERN_ALIGN = /^:?-+:?$/;
 
+/** 获取单元格 */
 function getCells(line: string): string[] {
 	line = line.trim();
 	const cells: string[] = [];
@@ -46,6 +53,7 @@ function getCells(line: string): string[] {
 	return cells;
 }
 
+/** 获取对齐信息 */
 function getAlign(cells: string[]): Align[] | undefined {
 	const align: Align[] = [];
 	for (const cell of cells) {
@@ -61,6 +69,7 @@ function getAlign(cells: string[]): Align[] | undefined {
 }
 
 /**
+ * 表格
  * @param containerInterruptPatterns
  * 用于检测可中断懒继行的容器块起始正则；
  * 例如：其他 blockquote/list 或自定义容器块

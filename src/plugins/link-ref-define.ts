@@ -14,9 +14,13 @@ import {
 } from './emphasis-links';
 
 interface Parsed {
+	/** 原始文本 */
 	raw: string;
+	/** 标签 */
 	label: string;
+	/** 链接目的地 */
 	destination: string;
+	/** 链接标题 */
 	title?: string;
 }
 
@@ -139,7 +143,10 @@ function tokenize(
 	return true;
 }
 
-/** @see https://spec.commonmark.org/0.31.2/#link-reference-definitions */
+/**
+ * 链接引用定义
+ * @see https://spec.commonmark.org/0.31.2/#link-reference-definitions
+ */
 export const linkRefDefine: ASTPlugin<'block', Node> = {
 	name: 'link-reference-define',
 	type: 'block',

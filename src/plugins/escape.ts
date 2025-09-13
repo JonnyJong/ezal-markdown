@@ -2,13 +2,17 @@ import { CommonPlugin, Parsed } from '../types';
 import { escapeHTML } from '../utils';
 
 export interface EscapeParsed extends Parsed {
+	/** 字符 */
 	char: string;
 }
 
 const PATTERN_ESCAPE =
 	/(?<!\\)\\[\u0021-\u002F\u003A-\u0040\u005B-\u0060\u007B-\u007E]/;
 
-/** @see https://spec.commonmark.org/0.31.2/#backslash-escapes */
+/**
+ * 字符转义
+ * @see https://spec.commonmark.org/0.31.2/#backslash-escapes
+ */
 export const charEscape: CommonPlugin<'inline', EscapeParsed> = {
 	name: 'escape',
 	type: 'inline',

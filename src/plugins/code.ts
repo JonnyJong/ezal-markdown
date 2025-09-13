@@ -2,13 +2,17 @@ import { CommonPlugin, Parsed } from '../types';
 import { $ } from '../utils';
 
 export interface CodeParsed extends Parsed {
+	/** 代码内容 */
 	code: string;
 }
 
 const PATTERN = /(?<!`)(`+)([^`]|[^`].*?[^`])\1(?!`)/s;
 const PATTERN_WRAP = /^ +(.*[^ ]|[^ ].*) +$/;
 
-/** @see https://spec.commonmark.org/0.31.2/#code-spans */
+/**
+ * 行内代码
+ * @see https://spec.commonmark.org/0.31.2/#code-spans
+ */
 export const code: CommonPlugin<'inline', CodeParsed> = {
 	name: 'code',
 	type: 'inline',

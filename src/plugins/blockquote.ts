@@ -14,6 +14,7 @@ const PATTERN_START = /(?<=^|\n) {0,3}>/;
 const PATTERN_BASIC_CASE = /^ {0,3}>/;
 
 /**
+ * 引用块
  * @param containerInterruptPatterns
  * 用于检测可中断懒继行的容器块起始正则；
  * 例如：其他 table/list 或自定义容器块

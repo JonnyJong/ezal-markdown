@@ -274,33 +274,60 @@ export class EzalMarkdown {
 }
 
 export const plugins = {
-	/** @see https://spec.commonmark.org/0.31.2/#backslash-escapes */
+	/**
+	 * 字符转义
+	 * @see https://spec.commonmark.org/0.31.2/#backslash-escapes
+	 */
 	charEscape,
-	/** @see https://spec.commonmark.org/0.31.2/#entity-references */
+	/**
+	 * 实体引用
+	 * @see https://spec.commonmark.org/0.31.2/#entity-references
+	 */
 	entityReference,
-	/** @see https://spec.commonmark.org/0.31.2/#decimal-numeric-character-references */
+	/**
+	 * 十进制字符引用
+	 * @see https://spec.commonmark.org/0.31.2/#decimal-numeric-character-references
+	 */
 	decimalCharReference,
-	/** @see https://spec.commonmark.org/0.31.2/#hexadecimal-numeric-character-references */
+	/**
+	 * 十六进制字符引用
+	 * @see https://spec.commonmark.org/0.31.2/#hexadecimal-numeric-character-references
+	 */
 	hexadecimalCharReference,
-	/** @see https://spec.commonmark.org/0.31.2/#thematic-breaks */
+	/**
+	 * 主题分隔符
+	 * @see https://spec.commonmark.org/0.31.2/#thematic-breaks
+	 */
 	thematicBreak,
 	/**
+	 * ATX 标题、Setext 标题
 	 * @see https://spec.commonmark.org/0.31.2/#atx-headings
 	 * @see https://spec.commonmark.org/0.31.2/#setext-headings
 	 */
 	heading,
 	/**
+	 * 缩进代码块、围栏代码块
 	 * @see https://spec.commonmark.org/0.31.2/#indented-code-blocks
 	 * @see https://spec.commonmark.org/0.31.2/#fenced-code-blocks
 	 */
 	codeblock,
-	/** @see https://spec.commonmark.org/0.31.2/#html-block */
+	/**
+	 * HTML 块
+	 * @see https://spec.commonmark.org/0.31.2/#html-block
+	 */
 	htmlBlock,
-	/** @see https://spec.commonmark.org/0.31.2/#link-reference-definitions */
+	/**
+	 * 链接引用定义
+	 * @see https://spec.commonmark.org/0.31.2/#link-reference-definitions
+	 */
 	linkRefDefine,
-	/** @see https://spec.commonmark.org/0.31.2/#paragraphs */
+	/**
+	 * 段落
+	 * @see https://spec.commonmark.org/0.31.2/#paragraphs
+	 */
 	paragraph,
 	/**
+	 * 表格
 	 * @param containerInterruptPatterns
 	 * 用于检测可中断懒继行的容器块起始正则；
 	 * 例如：其他 blockquote/list 或自定义容器块
@@ -313,6 +340,7 @@ export const plugins = {
 	 */
 	table,
 	/**
+	 * 块引用
 	 * @param containerInterruptPatterns
 	 * 用于检测可中断懒继行的容器块起始正则；
 	 * 例如：其他 table/list 或自定义容器块
@@ -325,6 +353,7 @@ export const plugins = {
 	 */
 	blockquote,
 	/**
+	 * 列表
 	 * @param containerInterruptPatterns
 	 * 用于检测可中断懒继行的容器块起始正则；
 	 * 例如：其他 table/list 或自定义容器块
@@ -340,24 +369,43 @@ export const plugins = {
 	 * ])
 	 */
 	list,
-	/** @see https://spec.commonmark.org/0.31.2/#code-spans */
+	/**
+	 * 行内代码
+	 * @see https://spec.commonmark.org/0.31.2/#code-spans
+	 */
 	code,
 	/**
+	 * 强调、删除线、链接、图像
 	 * @see https://spec.commonmark.org/0.31.2/#emphasis-and-strong-emphasis
 	 * @see https://spec.commonmark.org/0.31.2/#links
 	 * @see https://spec.commonmark.org/0.31.2/#images
 	 * @see https://github.github.com/gfm/#strikethrough-extension-
 	 */
 	emphasisAndLink,
-	/** @see https://spec.commonmark.org/0.31.2/#autolinks */
+	/**
+	 * 自动链接
+	 * @see https://spec.commonmark.org/0.31.2/#autolinks
+	 */
 	autolink,
-	/** @see https://spec.commonmark.org/0.31.2/#raw-html */
+	/**
+	 * 原始 HTML
+	 * @see https://spec.commonmark.org/0.31.2/#raw-html
+	 */
 	rawHtml,
-	/** @see https://spec.commonmark.org/0.31.2/#hard-line-breaks */
+	/**
+	 * 硬换行
+	 * @see https://spec.commonmark.org/0.31.2/#hard-line-breaks
+	 */
 	linebreak,
-	/** @see https://spec.commonmark.org/0.31.2/#soft-line-breaks */
+	/**
+	 * 软换行
+	 * @see https://spec.commonmark.org/0.31.2/#soft-line-breaks
+	 */
 	softbreak,
-	/** @see https://spec.commonmark.org/0.31.2/#blank-lines */
+	/**
+	 * Text 节点渲染器
+	 * @see https://spec.commonmark.org/0.31.2/#blank-lines
+	 */
 	text,
 };
 

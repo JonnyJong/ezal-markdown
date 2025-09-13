@@ -8,8 +8,11 @@ import { PATTERN_LIST_START } from './list';
 
 export interface HeadingParsed extends Parsed {
 	children: ParsedChild;
+	/** 标题等级 */
 	level: number;
+	/** 标题锚 */
 	anchor: string;
+	/** 标题文本 */
 	text: string;
 }
 
@@ -91,7 +94,10 @@ export function heading(options?: HeadingOptions) {
 		return $(`h${level}`, { id: anchor, html: children.html });
 	}
 
-	/** @see https://spec.commonmark.org/0.31.2/#atx-headings */
+	/**
+	 * ATX 标题
+	 * @see https://spec.commonmark.org/0.31.2/#atx-headings
+	 */
 	const atx: CommonPlugin<'block', HeadingParsed> = {
 		name: 'atx-heading',
 		type: 'block',
@@ -118,7 +124,10 @@ export function heading(options?: HeadingOptions) {
 		render,
 	};
 
-	/** @see https://spec.commonmark.org/0.31.2/#setext-headings */
+	/**
+	 * Setext 标题
+	 * @see https://spec.commonmark.org/0.31.2/#setext-headings
+	 */
 	const setext: CommonPlugin<'block', HeadingParsed> = {
 		name: 'setext-heading',
 		type: 'block',
@@ -147,9 +156,15 @@ export function heading(options?: HeadingOptions) {
 	};
 
 	return {
-		/** @see https://spec.commonmark.org/0.31.2/#atx-headings */
+		/**
+		 * ATX 标题
+		 * @see https://spec.commonmark.org/0.31.2/#atx-headings
+		 */
 		atx,
-		/** @see https://spec.commonmark.org/0.31.2/#setext-headings */
+		/**
+		 * Setext 标题
+		 * @see https://spec.commonmark.org/0.31.2/#setext-headings
+		 */
 		setext,
 	};
 }

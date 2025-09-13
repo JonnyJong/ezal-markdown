@@ -100,10 +100,14 @@ const PATTERN_HTML_RAW = new RegExp(
 );
 
 export interface HTMLBlockParsed extends Parsed {
+	/** HTML 块类型 */
 	type: number;
 }
 
-/** @see https://spec.commonmark.org/0.31.2/#html-block */
+/**
+ * HTML 块
+ * @see https://spec.commonmark.org/0.31.2/#html-block
+ */
 export const htmlBlock: CommonPlugin<'block', HTMLBlockParsed> = {
 	name: 'html',
 	type: 'block',
@@ -161,7 +165,10 @@ export const htmlBlock: CommonPlugin<'block', HTMLBlockParsed> = {
 	},
 };
 
-/** @see https://spec.commonmark.org/0.31.2/#raw-html */
+/**
+ * 原始 HTML
+ * @see https://spec.commonmark.org/0.31.2/#raw-html
+ */
 export const rawHtml: CommonPlugin<'inline'> = {
 	name: 'html',
 	type: 'inline',

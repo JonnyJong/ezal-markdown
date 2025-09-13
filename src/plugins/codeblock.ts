@@ -11,10 +11,22 @@ import {
 
 export interface CodeblockParsed extends Parsed {
 	children?: ParsedChild;
+	/** 代码内容 */
 	code: string;
+	/** 语言 */
 	lang?: string;
 }
 
+/**
+ * 代码高亮器
+ * @param code 代码
+ * @param lang 语言
+ * @returns
+ * - 单值：高亮的 HTML 字符串
+ * - 多值：
+ *   0. 高亮的 HTML 字符串
+ *   1. HTML 标签类名
+ */
 export type CodeHighlighter = (
 	code: string,
 	lang?: string,
@@ -40,7 +52,10 @@ export function codeblock(highlighter?: CodeHighlighter) {
 		return $('pre', $('code', { class: className, html }));
 	}
 
-	/** @see https://spec.commonmark.org/0.31.2/#indented-code-blocks */
+	/**
+	 * 缩进代码块
+	 * @see https://spec.commonmark.org/0.31.2/#indented-code-blocks
+	 */
 	const indentedCodeblock: CommonPlugin<'block', CodeblockParsed> = {
 		name: 'indented-codeblock',
 		type: 'block',
@@ -68,7 +83,10 @@ export function codeblock(highlighter?: CodeHighlighter) {
 		render,
 	};
 
-	/** @see https://spec.commonmark.org/0.31.2/#fenced-code-blocks */
+	/**
+	 * 围栏代码块
+	 * @see https://spec.commonmark.org/0.31.2/#fenced-code-blocks
+	 */
 	const fencedCodeblock: CommonPlugin<'block', CodeblockParsed> = {
 		name: 'fenced-codeblock',
 		type: 'block',
@@ -115,9 +133,15 @@ export function codeblock(highlighter?: CodeHighlighter) {
 	};
 
 	return {
-		/** @see https://spec.commonmark.org/0.31.2/#indented-code-blocks */
+		/**
+		 * 缩进代码块
+		 * @see https://spec.commonmark.org/0.31.2/#indented-code-blocks
+		 */
 		indentedCodeblock,
-		/** @see https://spec.commonmark.org/0.31.2/#fenced-code-blocks */
+		/**
+		 * 围栏代码块
+		 * @see https://spec.commonmark.org/0.31.2/#fenced-code-blocks
+		 */
 		fencedCodeblock,
 	};
 }

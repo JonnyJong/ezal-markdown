@@ -5,14 +5,27 @@ import { $, escapeMarkdown } from '../utils';
 import { DEFAULT_RESOLVER, LinkTargetResolver } from './autolink';
 
 export interface EmphasisAndLinkOption {
+	/** 链接目标解析器 */
 	targetResolver?: LinkTargetResolver;
-	/** @see https://spec.commonmark.org/0.31.2/#emphasis-and-strong-emphasis */
+	/**
+	 * 禁用强调、加强强调语法
+	 * @see https://spec.commonmark.org/0.31.2/#emphasis-and-strong-emphasis
+	 */
 	disableEmphasis?: boolean;
-	/** @see https://spec.commonmark.org/0.31.2/#links */
+	/**
+	 * 禁用链接语法
+	 * @see https://spec.commonmark.org/0.31.2/#links
+	 */
 	disableLinks?: boolean;
-	/** @see https://spec.commonmark.org/0.31.2/#images */
+	/**
+	 * 禁用图像语法
+	 * @see https://spec.commonmark.org/0.31.2/#images
+	 */
 	disableImages?: boolean;
-	/** @see https://github.github.com/gfm/#strikethrough-extension- */
+	/**
+	 * 禁用删除线语法
+	 * @see https://github.github.com/gfm/#strikethrough-extension-
+	 */
 	disableStrikethrough?: boolean;
 }
 
@@ -494,6 +507,7 @@ function createStacks(
 
 //#region Emph & Strikethrough
 
+/** 强调节点 */
 export class EmphNode extends Node {
 	constructor(delimiter: Delimiter, nodes: Node[]) {
 		super('emph', 'inline');
@@ -509,6 +523,7 @@ export class EmphNode extends Node {
 	}
 }
 
+/** 加强强调节点 */
 export class StrongNode extends Node {
 	constructor(delimiter: Delimiter, nodes: Node[]) {
 		super('strong', 'inline');
@@ -526,6 +541,7 @@ export class StrongNode extends Node {
 	}
 }
 
+/** 删除线节点 */
 export class DelNode extends Node {
 	constructor(delimiter: Delimiter, nodes: Node[]) {
 		super('del', 'inline');
@@ -628,6 +644,7 @@ function processEmph(stack: Delimiter[]) {
 
 //#region Link & Image
 
+/** 链接节点 */
 export class LinkNode extends Node {
 	constructor(destination: string, title?: string, label?: string) {
 		super('link', 'inline');
@@ -649,6 +666,7 @@ export class LinkNode extends Node {
 	}
 }
 
+/** 图像节点 */
 export class ImageNode extends Node {
 	constructor(destination: string, title?: string, label?: string) {
 		super('image', 'inline');
@@ -758,7 +776,10 @@ function removeHTMLTags(source: string) {
 	return source.replace(PATTERN_TAG_OPEN, '').replace(PATTERN_TAG_CLOSE, '');
 }
 
-/** @see https://spec.commonmark.org/0.31.2/#an-algorithm-for-parsing-nested-emphasis-and-links */
+/**
+ * 强调、删除线、链接、图像
+ * @see https://spec.commonmark.org/0.31.2/#an-algorithm-for-parsing-nested-emphasis-and-links
+ */
 export function emphasisAndLink(
 	options?: EmphasisAndLinkOption,
 ): ASTPlugin<'inline', EmphNode | StrongNode | DelNode | ImageNode | LinkNode> {

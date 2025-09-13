@@ -8,10 +8,15 @@ import { PATTERN_THEMATIC_BREAK } from './thematic-break';
 
 export interface ListParsed extends Parsed {
 	children: ParsedChild[];
+	/** 是否有序 */
 	ordered: boolean;
+	/** 起始值 */
 	start: number;
+	/** 分隔符类型 */
 	delimiter: '-' | '+' | '*' | '.' | ')';
+	/** 紧凑性 */
 	tight?: boolean;
+	/** 任务列表项状态 */
 	tasks: (boolean | null)[];
 }
 
@@ -42,6 +47,7 @@ const PATTERN_LIST = /^[ \t]*([-+*]|\d{1,9}[.)])( |\t|$)/;
 const PATTERN_BLANK_LINES = /(^|\n)[ \t\n]*(\n|$)/;
 
 /**
+ * 列表
  * @param containerInterruptPatterns
  * 用于检测可中断懒继行的容器块起始正则；
  * 例如：其他 table/list 或自定义容器块
