@@ -24,4 +24,12 @@ export default defineConfig([
 		plugins: [ts(), dts()],
 		external,
 	},
+	{
+		input: 'src/types.d.ts',
+		output: {
+			file: 'dist/types.d.ts',
+		},
+		plugins: [dts()],
+		external,
+	},
 ]);
