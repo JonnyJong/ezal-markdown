@@ -7,7 +7,7 @@ import { ASTLikeNode, initAstMatcher } from '../ast';
 initAstMatcher();
 
 describe('Plugin: line-break', () => {
-	it('targetResolver', async () => {
+	it('lineBreak', async () => {
 		const md = 'foo\nbar';
 		const ast: ASTLikeNode = [
 			'document',

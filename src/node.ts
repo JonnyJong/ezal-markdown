@@ -88,7 +88,7 @@ export class Node implements Partial<TokenizeOptions> {
 		const skipParagraphWrapping = this.#skipParagraphWrapping ?? false;
 		let lineBreak = this.#lineBreak;
 		let node = this.parent;
-		while (node && maxLevel === undefined && lineBreak === undefined) {
+		while (node && (maxLevel === undefined || lineBreak === undefined)) {
 			if (maxLevel === undefined && node.#maxLevel !== undefined) {
 				maxLevel = node.#maxLevel;
 			}
