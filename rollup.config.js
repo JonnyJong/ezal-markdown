@@ -8,6 +8,20 @@ function external(id) {
 
 export default defineConfig([
 	{
+		input: 'src/types.d.ts',
+		output: {
+			file: 'dist/types.d.ts',
+		},
+		plugins: [dts()],
+		external: () => true,
+	},
+	{
+		input: 'src/index.ts',
+		output: 'dist/index.js',
+		plugins: [dts()],
+		external,
+	},
+	{
 		input: 'src/index.ts',
 		output: [
 			{
@@ -21,15 +35,7 @@ export default defineConfig([
 				sourcemap: true,
 			},
 		],
-		plugins: [ts(), dts()],
+		plugins: [ts()],
 		external,
-	},
-	{
-		input: 'src/types.d.ts',
-		output: {
-			file: 'dist/types.d.ts',
-		},
-		plugins: [dts()],
-		external: () => true,
 	},
 ]);

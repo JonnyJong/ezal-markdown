@@ -16,7 +16,10 @@
 		"type": "git",
 		"url": "git://github.com/JonnyJong/ezal-markdown.git"
 	},
-	"keywords": ["markdown", "ezal"],
+	"keywords": [
+		"markdown",
+		"ezal"
+	],
 	"author": "jonnyjonny",
 	"license": "MIT",
 	"bugs": {
@@ -24,15 +27,15 @@
 	},
 	"homepage": "https://github.com/JonnyJong/ezal-markdown#readme",
 	"devDependencies": {
+		"@rollup/plugin-typescript": "^12.1.4",
 		"@vitest/coverage-v8": "3.2.4",
 		"@vitest/expect": "3.2.4",
 		"rimraf": "^6.0.1",
+		"rollup": "^4.46.3",
+		"rollup-plugin-dts": "^6.2.3",
 		"tslib": "^2.8.1",
 		"typescript": "5.8.3",
-		"vitest": "3.2.4",
-		"rollup": "^4.46.3",
-		"@rollup/plugin-typescript": "^12.1.4",
-		"rollup-plugin-dts": "^6.2.3"
+		"vitest": "3.2.4"
 	},
 	"peerDependencies": {
 		"yaml": "^2.8.0"
