@@ -453,6 +453,7 @@ export {
 } from './plugins/blockquote';
 export { CodeParsed } from './plugins/code';
 export {
+	CodeblockOptions,
 	CodeblockParsed,
 	CodeHighlighter,
 	PATTERN_FENCE_START,

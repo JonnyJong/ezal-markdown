@@ -3,6 +3,7 @@ import { CommonPlugin, Parsed, PromiseOr } from '../types';
 import {
 	$,
 	eachLine,
+	escapeHTML,
 	escapeMarkdown,
 	indentSizeOf,
 	isEmpty,
@@ -25,12 +26,17 @@ export interface CodeblockParsed extends Parsed {
  * - 单值：高亮的 HTML 字符串
  * - 多值：
  *   0. 高亮的 HTML 字符串
- *   1. HTML 标签类名
+ *   1. 解析的语言
  */
 export type CodeHighlighter = (
 	code: string,
 	lang?: string,
-) => PromiseOr<string | [html: string, className?: string]>;
+) => PromiseOr<string | [html: string, lang?: string]>;
+
+export interface CodeblockOptions {
+	highlighter?: CodeHighlighter;
+	packager?: (html: string, lang?: string) => string;
+}
 
 const PATTERN_INDENT_START = /(?<=^|^\s*\n|\n\s*\n)[ \t]+\S/;
 export const PATTERN_FENCE_START =
@@ -38,7 +44,14 @@ export const PATTERN_FENCE_START =
 const PATTERN_FENCE_HEAD = /(?<=^|\n)( {0,3})(`{3,}|~{3,}).*(?=$|\n)/;
 const PATTERN_FENCE_INFO_SPLIT = /[ \t]/;
 
-export function codeblock(highlighter?: CodeHighlighter) {
+const DEFAULT_OPTIONS: Required<CodeblockOptions> = {
+	highlighter: (code) => escapeHTML(code),
+	packager: (html, lang) => $('pre', $('code', { class: lang, html })),
+};
+
+// TODO：自定义包装函数
+export function codeblock(options?: CodeblockOptions) {
+	const { highlighter, packager } = Object.assign({}, DEFAULT_OPTIONS, options);
 	async function render({ code, lang }: CodeblockParsed) {
 		if (!highlighter) return $('pre', $('code', { content: code }));
 		const result = await highlighter(code, lang);
@@ -49,7 +62,7 @@ export function codeblock(highlighter?: CodeHighlighter) {
 		} else {
 			[html, className] = result;
 		}
-		return $('pre', $('code', { class: className, html }));
+		return packager(html, className);
 	}
 
 	/**
