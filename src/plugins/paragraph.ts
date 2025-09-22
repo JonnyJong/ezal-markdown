@@ -33,7 +33,7 @@ function parse(root: Node) {
 		for (let j = i; ; j++) {
 			const child = root.child(j);
 			if (!child) break;
-			if (child.type === 'block') continue;
+			if (child.type === 'block') break;
 			if (!(child instanceof Text)) {
 				nodes.push(child);
 				continue;
