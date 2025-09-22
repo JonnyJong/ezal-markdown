@@ -1,8 +1,8 @@
 import { Anchors } from './anchor';
 import { Counter } from './counter';
-import { Logger, defaultLogger } from './logger';
+import { defaultLogger, Logger } from './logger';
 import { NODE_TYPES, Node, NodeType } from './node';
-import { parse } from './parse';
+import { ParseResult, parse } from './parse';
 import { PluginContextMap, PluginsManager, PluginsMap } from './plugin';
 import { autolink } from './plugins/autolink';
 import { text } from './plugins/base';
@@ -25,7 +25,7 @@ import { paragraph } from './plugins/paragraph';
 import { table } from './plugins/table';
 import { thematicBreak } from './plugins/thematic-break';
 import { RefMap } from './ref-map';
-import { renderHTML } from './render';
+import { HTMLRenderResult, renderHTML } from './render';
 import { Toc } from './toc';
 import {
 	Context,
@@ -191,7 +191,10 @@ export class EzalMarkdown {
 	 * @param source Markdown 源文本
 	 * @param options 解析参数
 	 */
-	async parse(source: string, options?: ParseOptions | ResolvedOptions) {
+	async parse(
+		source: string,
+		options?: ParseOptions | ResolvedOptions,
+	): Promise<ParseResult> {
 		return parse(source, await this.resolve(options));
 	}
 	/**
@@ -200,14 +203,25 @@ export class EzalMarkdown {
 	 * @param options 解析参数
 	 */
 	async renderHTML(
+		source: string,
+		options?: ParseOptions | ResolvedOptions,
+	): Promise<HTMLRenderResult & ParseResult>;
+	async renderHTML(
+		source: Node,
+		options?: ParseOptions | ResolvedOptions,
+	): Promise<HTMLRenderResult>;
+	async renderHTML(
 		source: string | Node,
 		options?: ParseOptions | ResolvedOptions,
-	) {
+	): Promise<HTMLRenderResult | (HTMLRenderResult & ParseResult)> {
 		const resolvedOptions = await this.resolve(options);
+		let parsed: ParseResult | null = null;
 		if (typeof source === 'string') {
-			source = (await parse(source, resolvedOptions)).document;
+			parsed = await parse(source, resolvedOptions);
+			source = parsed.document;
 		}
-		return renderHTML(source, resolvedOptions);
+		const rendered = await renderHTML(source, resolvedOptions);
+		return Object.assign(rendered, parsed);
 	}
 	/** 日志记录器 */
 	static logger?: Logger;
@@ -253,7 +267,10 @@ export class EzalMarkdown {
 	 * @param source Markdown 源文本
 	 * @param options 解析参数
 	 */
-	static async parse(source: string, options?: ParseOptions | ResolvedOptions) {
+	static async parse(
+		source: string,
+		options?: ParseOptions | ResolvedOptions,
+	): Promise<ParseResult> {
 		return parse(source, await EzalMarkdown.resolve(options));
 	}
 	/**
@@ -262,14 +279,25 @@ export class EzalMarkdown {
 	 * @param options 解析参数
 	 */
 	static async renderHTML(
+		source: string,
+		options?: ParseOptions | ResolvedOptions,
+	): Promise<HTMLRenderResult & ParseResult>;
+	static async renderHTML(
+		source: Node,
+		options?: ParseOptions | ResolvedOptions,
+	): Promise<HTMLRenderResult>;
+	static async renderHTML(
 		source: string | Node,
 		options?: ParseOptions | ResolvedOptions,
-	) {
+	): Promise<HTMLRenderResult | (HTMLRenderResult & ParseResult)> {
 		const resolvedOptions = await EzalMarkdown.resolve(options);
+		let parsed: ParseResult | null = null;
 		if (typeof source === 'string') {
-			source = (await parse(source, resolvedOptions)).document;
+			parsed = await parse(source, resolvedOptions);
+			source = parsed.document;
 		}
-		return renderHTML(source, resolvedOptions);
+		const rendered = await renderHTML(source, resolvedOptions);
+		return Object.assign(rendered, parsed);
 	}
 }
 
@@ -409,18 +437,11 @@ export const plugins = {
 	text,
 };
 
-export * from './frontmatter';
 export * from './anchor';
-export * from './toc';
 export * from './counter';
-export * from './ref-map';
-export type { Logger, LogData } from './logger';
-
+export * from './frontmatter';
+export type { LogData, Logger } from './logger';
 export * from './node';
-export type * from './types';
-
-export * as utils from './utils';
-
 export {
 	AutoLinkParsed,
 	LinkTarget,
@@ -437,22 +458,26 @@ export {
 	PATTERN_FENCE_START,
 } from './plugins/codeblock';
 export {
+	DelNode,
 	EmphasisAndLinkOption,
 	EmphNode,
-	StrongNode,
-	DelNode,
-	LinkNode,
 	ImageNode,
+	LinkNode,
+	StrongNode,
 } from './plugins/emphasis-links';
 export { CharReferenceParsed } from './plugins/entity';
 export { EscapeParsed } from './plugins/escape';
 export {
-	HeadingParsed,
 	HeadingOptions,
+	HeadingParsed,
 	PATTERN_ATX_START,
 } from './plugins/heading';
 export { HTMLBlockParsed } from './plugins/html';
-export { ListParsed, ListOptions, PATTERN_LIST_START } from './plugins/list';
+export { ListOptions, ListParsed, PATTERN_LIST_START } from './plugins/list';
 export { Paragraph } from './plugins/paragraph';
-export { TableParsed, PATTERN_TABLE_START } from './plugins/table';
+export { PATTERN_TABLE_START, TableParsed } from './plugins/table';
 export { PATTERN_THEMATIC_BREAK } from './plugins/thematic-break';
+export * from './ref-map';
+export * from './toc';
+export type * from './types';
+export * as utils from './utils';
