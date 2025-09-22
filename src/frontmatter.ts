@@ -1,9 +1,9 @@
 import type {
 	DocumentOptions,
 	ParseOptions,
-	SchemaOptions,
 	parseAllDocuments,
 	parseDocument,
+	SchemaOptions,
 } from 'yaml';
 
 type YamlModule = typeof import('yaml');
@@ -35,13 +35,14 @@ export interface FrontmatterExtractOptions {
 const PATTERN_WRAP = /\r\n?/g;
 const PATTERN_BEGIN = /^-{3,}\n/;
 
-let yaml: YamlModule | undefined = undefined;
+let yaml: YamlModule | undefined;
 async function loadYaml(): Promise<YamlModule> {
 	if (yaml) return yaml;
 	try {
-		// @ts-ignore
+		// @ts-expect-error
 		yaml = require('yaml');
 		return yaml as YamlModule;
+		// biome-ignore lint/suspicious/noEmptyBlockStatements: Will try another way if this fails
 	} catch {}
 	try {
 		yaml = await import('yaml');

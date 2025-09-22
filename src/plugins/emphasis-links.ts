@@ -1,5 +1,6 @@
+/** biome-ignore-all lint/suspicious/noControlCharactersInRegex: Need to match control characters in regex */
 import { Node, ParsedNode, Text } from '../node';
-import { RefMap, normalizeLabel } from '../ref-map';
+import { normalizeLabel, RefMap } from '../ref-map';
 import { ASTPlugin } from '../types';
 import { $, escapeMarkdown } from '../utils';
 import { DEFAULT_RESOLVER, LinkTargetResolver } from './autolink';
@@ -484,7 +485,7 @@ function createStacks(
 				const matched = child.raw.match(pattern);
 				if (matched?.index === undefined) break;
 				// 分割
-				const nodes = child.splitAt(
+				const nodes: Text[] = child.splitAt(
 					matched.index,
 					matched.index + matched[0].length,
 				);

@@ -1,6 +1,6 @@
 import { Node, Text } from '../node';
 import { PluginLogger } from '../plugin';
-import { RefMap, normalizeLabel } from '../ref-map';
+import { normalizeLabel, RefMap } from '../ref-map';
 import { ASTPlugin } from '../types';
 import { escapeMarkdown, isEmpty } from '../utils';
 import {
@@ -68,7 +68,7 @@ function parse(source: string): Parsed | undefined {
 	if (extraLength === length && source[extraLength]) return;
 	// Title
 	const titleLength = titleLengthOf(source.slice(extraLength));
-	let title: string | undefined = undefined;
+	let title: string | undefined;
 	if (titleLength) {
 		title = escapeMarkdown(
 			source.slice(extraLength + 1, extraLength + titleLength - 1),

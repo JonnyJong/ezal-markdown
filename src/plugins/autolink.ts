@@ -12,6 +12,7 @@ export type LinkTarget = 'self' | 'blank' | 'parent' | 'top' | undefined;
 /** 链接目标解析器 */
 export type LinkTargetResolver = (link: string) => LinkTarget;
 
+// biome-ignore lint/suspicious/noControlCharactersInRegex: Need to match control characters in regex
 const PATTERN_LINK = /<[A-Za-z][A-Za-z\d+.-]*:[^\u0000-\u001F\u007F <>]*>/;
 const PATTERN_EMAIL =
 	/<[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*>/;

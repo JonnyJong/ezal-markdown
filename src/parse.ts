@@ -1,12 +1,12 @@
-import { FrontmatterExtractResult, extractFrontmatter } from './frontmatter';
+import { extractFrontmatter, FrontmatterExtractResult } from './frontmatter';
 import { Document, NODE_TYPES, Node, NodeType, ParsedNode, Text } from './node';
 import {
 	CommonPluginContext,
-	PluginContextMap,
 	comparePriority,
+	PluginContextMap,
 } from './plugin';
 import { Context, ResolvedOptions, TokenizeOptions } from './types';
-import { OrderedPositionMap, isObject, stackSafeRecursion } from './utils';
+import { isObject, OrderedPositionMap, stackSafeRecursion } from './utils';
 
 export interface ParseResult {
 	options: ResolvedOptions;
@@ -184,7 +184,7 @@ export async function parse(
 	// 预处理
 	source = source.replace(PATTERN_EOL, '\n');
 	// Frontmatter
-	let frontmatter: FrontmatterExtractResult | undefined = undefined;
+	let frontmatter: FrontmatterExtractResult | undefined;
 	if (options.frontmatter) {
 		frontmatter = await extractFrontmatter(
 			source,

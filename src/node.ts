@@ -1,5 +1,5 @@
 import { Nested, Parsed, SafeAny, TokenizeOptions } from './types';
-import { Queue, entiresNested, omit } from './utils';
+import { entiresNested, omit, Queue } from './utils';
 
 /**
  * 节点类型

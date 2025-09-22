@@ -399,7 +399,7 @@ export function $(
 		let css = '';
 		for (const [k, v] of Object.entries(options.style)) {
 			if (!v) continue;
-			let value: string | undefined = undefined;
+			let value: string | undefined;
 			if (typeof v === 'number') value = `${v}px`;
 			else if (typeof v === 'string') {
 				value = v.replace(PATTERN_CSS_VAR, (v) => {

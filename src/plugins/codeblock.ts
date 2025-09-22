@@ -43,7 +43,7 @@ export function codeblock(highlighter?: CodeHighlighter) {
 		if (!highlighter) return $('pre', $('code', { content: code }));
 		const result = await highlighter(code, lang);
 		let html: string;
-		let className: string | undefined = undefined;
+		let className: string | undefined;
 		if (typeof result === 'string') {
 			html = result;
 		} else {
@@ -114,7 +114,7 @@ export function codeblock(highlighter?: CodeHighlighter) {
 			);
 			const index = info.match(PATTERN_FENCE_INFO_SPLIT)?.index;
 			let lang = info;
-			let text: string | undefined = undefined;
+			let text: string | undefined;
 			if (index) {
 				lang = info.slice(0, index);
 				text = info.slice(index).trimStart();

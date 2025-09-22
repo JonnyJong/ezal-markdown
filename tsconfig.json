@@ -4,9 +4,7 @@
 		"target": "esnext",
 		"module": "esnext",
 		"moduleResolution": "bundler",
-		"lib": [
-			"ESNext"
-		],
+		"lib": ["ESNext"],
 		// Checking
 		"strict": true,
 		"noImplicitAny": true,
@@ -33,10 +31,6 @@
 		"declaration": true,
 		"outDir": "dist"
 	},
-	"include": [
-		"src/**/*",
-	],
-	"exclude": [
-		"dist",
-	],
+	"include": ["src/**/*"],
+	"exclude": ["dist"]
 }

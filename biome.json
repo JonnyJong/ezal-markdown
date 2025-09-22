@@ -34,7 +34,8 @@
 				"noUnusedFunctionParameters": "error",
 				"noUnusedImports": "error",
 				"noUnusedPrivateClassMembers": "error",
-				"noUnusedVariables": "error"
+				"noUnusedVariables": "error",
+				"useParseIntRadix": "off"
 			},
 			"nursery": {
 				"noSecrets": "off"

@@ -93,7 +93,7 @@ const PATTERN_HTML_RAW = new RegExp(
 		// Processing Instruction
 		String.raw`<\?>|<\?[\s\S]*?\?>`,
 		// Declaration
-		String.raw`<![A-Za-z][^>]*>`,
+		`<![A-Za-z][^>]*>`,
 		// CDATA Section
 		String.raw`<!\[CDATA\[[\s\S]*?\]\]>`,
 	].join('|'),
