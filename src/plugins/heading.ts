@@ -115,7 +115,7 @@ export function heading(options?: HeadingOptions) {
 			const { text, anchor } = register(toc, level, content);
 			return {
 				raw,
-				level: options?.shiftLevels ? Math.min(level + 1, 6) : level,
+				level: level,
 				anchor,
 				children: md(text, 'inline'),
 				text,
@@ -146,7 +146,7 @@ export function heading(options?: HeadingOptions) {
 			const { text, anchor } = register(toc, level, content);
 			return {
 				raw,
-				level: options?.shiftLevels ? Math.min(level + 1, 6) : level,
+				level: level,
 				anchor,
 				children: md(text, 'inline'),
 				text,
