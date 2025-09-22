@@ -22,10 +22,39 @@ describe('Plugin: codeblock', () => {
 </code></pre>`;
 		const renderer = new EzalMarkdown();
 		renderer.set(
-			codeblock((code, lang) => [
-				escapeHTML(code),
-				lang ? `lang-${lang}` : undefined,
-			]),
+			codeblock({
+				highlighter: (code, lang) => [
+					escapeHTML(code),
+					lang ? `lang-${lang}` : undefined,
+				],
+			}),
+		);
+		const result = await renderer.parse(md);
+		expect(result.document).toLikeAst(ast);
+		const rendered = await renderer.renderHTML(result.document, result.options);
+		expect(rendered.html).toBe(html);
+	});
+	it('packager', async () => {
+		const md =
+			'    indented codeblock\n\n```ts\nconsole.log(`fenced codeblock`);\n```';
+		const ast: ASTLikeNode = [
+			'document',
+			[['indented-codeblock', {}]],
+			[['fenced-codeblock', {}]],
+		];
+		const html = `<pre><code>indented codeblock
+</code></pre><pre lang="lang-ts"><code>console.log(\`fenced codeblock\`);
+</code></pre>`;
+		const renderer = new EzalMarkdown();
+		renderer.set(
+			codeblock({
+				highlighter: (code, lang) => [
+					escapeHTML(code),
+					lang ? `lang-${lang}` : undefined,
+				],
+				packager: (code, lang) =>
+					`<pre${lang ? ` lang="${lang}"` : ''}><code>${code}</code></pre>`,
+			}),
 		);
 		const result = await renderer.parse(md);
 		expect(result.document).toLikeAst(ast);
