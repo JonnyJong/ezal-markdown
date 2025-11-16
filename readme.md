@@ -72,179 +72,44 @@ pnpm test
 ## Documentation
 
 ### Plugins
-Syntax in EzalMarkdown is implemented via plugins.
+All syntax in EzalMarkdown is implemented through plugins.
 
-Plugins are categorized into three types:
-- block: Block-level, parsed first (e.g., paragraphs, lists).
-- inline: Inline-level (e.g., bold, links).
-- atomic: Atomic-level, parsed last (e.g., plain text, line breaks).
+Plugins are divided into two levels and three types:
+- Levels:
+  - block: Block-level, parsed first (e.g., paragraphs, lists, etc.)
+  - inline: Inline-level (e.g., bold, links, etc.)
+- Types:
+  - `RendererPlugin`: Renderer plugin, used only for rendering, used in EzalMarkdown to render plain text
+  - `CommonPlugin`: Common plugin, processes and renders by text matching
+  - `ASTPlugin`: AST plugin, parses, replaces with custom nodes, and renders on the AST
 
 ### Built-in Plugins
 
-Block Plugins:
-| Name               | Priority | Description          |
-| ------------------ | -------- | -------------------- |
-| paragraph          | -2       | Paragraph (No parse) |
-| blockquote         | 0        | Blockquote           |
-| codeblock          | 0        | Indented code block  |
-| codeblock-fenced   | 0        | Fenced code block    |
-| footnote           | 0        | Footnote (source)    |
-| heading            | 0        | ATX-style heading    |
-| heading-underscore | 0        | Setext-style heading |
-| hr                 | 0        | Horizontal rule      |
-| image              | 0        | Image                |
-| image-reference    | 0        | Image (reference)    |
-| list-ordered       | 0        | Ordered list         |
-| list-unordered     | 0        | Unordered list       |
-| list-task          | 0        | Task list (GFM)      |
-| table              | 0        | Table                |
-| tex-dollar         | 0        | Tex `$$...$$`        |
-| tex-bracket        | 0        | Tex `\[...\]`        |
-| html               | 0        |                      |
-| html-comment       | 0        |                      |
-
-Inline Plugins:
-| Name            | Priority | Description                                |
-| --------------- | -------- | ------------------------------------------ |
-| bold            | 0        | Bold text                                  |
-| italic          | 0        | Italic text                                |
-| bold-italic     | 0        | Bold and italic text                       |
-| del             | 0        | Strikethrough                              |
-| code            | 0        | Inline code                                |
-| footnote        | 0        | Footnote (reference)                       |
-| image           | 0        | Image                                      |
-| image-reference | 0        | Image (reference)                          |
-| link            | 0        | Link                                       |
-| link-source     | 0        | Link (source); also used for image sources |
-| link-reference  | 0        | Link (reference)                           |
-| link-bracket    | 0        | Autolink                                   |
-| email-bracket   | 0        | Autolink for email                         |
-| tex-dollar      | 0        | Tex `$...$`                                |
-| tex-bracket     | 0        | Tex `\(...\)`                              |
-| html            | 0        |                                            |
-| html-comment    | 0        |                                            |
-| escape          | -1       | Escape characters                          |
-
-Atomic Plugins:
-| Name       | Priority | Description                                                |
-| ---------- | -------- | ---------------------------------------------------------- |
-| text       | -1       | Plain text (No parse, word count tracked during rendering) |
-| break-hard | 0        | Hard line break                                            |
-| break-soft | 0        | Soft line break                                            |
-| escape     | -1       | Escape characters                                          |
-
-### Shared Rendering Context
-Built-in plugins create/use the following in the shared rendering context:
-```ts
-interface Shared {
-	/** Footnote references */
-	footnote: Record<string, string>;
-	/** Link references */
-	links: Record<string, { url: string, title?: string }>;
-}
-```
-
-### Custom Plugins
-```ts
-interface Plugin<
-	T extends NodeType,
-	R extends TypeToParseResult<T> = TypeToParseResult<T>,
-	C = never,
-> {
-	/** Name */
-	name: string;
-	/**
-	 * Node type
-	 * @description
-	 * - `block`: Block node
-	 * - `inline`: Inline node
-	 * - `atomic`: Atomic node
-	 */
-	type: T;
-	/**
-	 * Priority
-	 * @default 0
-	 */
-	priority?: number;
-	/**
-	 * Start position matcher
-	 * @description
-	 * - `StartMatcher`: Use a function to match; returns `-1 | null | undefined` if no match.
-	 * - `string`: Matches the position of the string.
-	 * - `RegExp`: Matches the position of the regex.
-	 */
-	start:
-		| string
-		| RegExp
-		| ((
-				source: string,
-				context: PluginContext<C>,
-		  ) => PromiseOr<number | RegExpMatchArray | null | undefined>);
-	/** Parse */
-	parse(
-		source: string,
-		context: PluginContext<C, this>,
-	): PromiseOr<R | null | undefined | false>;
-	/** Render */
-	render(
-		source: ParseResultToRenderSource<R>,
-		context: PluginContext<C, this>,
-	): PromiseOr<string>;
-	/** Initialize plugin-specific context */
-	context?: C extends never ? undefined : () => PromiseOr<C>;
-}
-```
-
-### AST
-EzalMarkdown renders Markdown text by parsing it into an AST and then converting it to HTML.
-
-The AST root is an array of nodes `Node[]`, defined as follows:
-```ts
-type Children<T> = T | Children<T>[] | { [key: string]: Children<T> };
-
-/**
- * Node type
- * @description
- * - `block`: Block node
- * - `inline`: Inline node
- * - `atomic`: Atomic node
- */
-type NodeType = 'block' | 'inline' | 'atomic';
-
-/** Base node */
-interface BaseNode {
-	/** Plugin name corresponding to the node */
-	name: string;
-	/** Node type */
-	type: NodeType;
-	/** Raw data of the node */
-	raw: string;
-	/** Custom data for the plugin corresponding to the node */
-	data: object;
-}
-
-/** Atomic node */
-interface AtomicNode extends BaseNode {
-	/** Node type */
-	type: 'atomic';
-}
-
-/** Inline node */
-interface InlineNode extends BaseNode {
-	/** Node type */
-	type: 'inline';
-	/** Child nodes */
-	children: Children<AtomicNode | InlineNode>;
-}
-
-/** Block node */
-interface BlockNode extends BaseNode {
-	/** Node type */
-	type: 'block';
-	/** Child nodes */
-	children: Children<Node>;
-}
-```
+| Name                            | Type     | Level  | Order | Priority | Description                            |
+| ------------------------------- | -------- | ------ | ----- | -------- | -------------------------------------- |
+| text                            | Renderer | inline | N/A   | N/A      | Renders text nodes                     |
+| emphasis-and-links              | AST      | inline | post  | 0        | Emphasis, strikethrough, links, images |
+| autolink                        | Common   | inline | 0     | 0        | Autolink `<https://jonnys.top>`        |
+| code                            | Common   | inline | 0     | 0        | Inline code `` `code` ``               |
+| entity-reference                | Common   | inline | 0     | 0        | Entity reference                       |
+| decimal-character-reference     | Common   | inline | 0     | 0        | Decimal character reference            |
+| hexadecimal-character-reference | Common   | inline | 0     | 0        | Hexadecimal character reference        |
+| escape                          | Common   | inline | 0     | 0        | Character escape                       |
+| html                            | Common   | inline | 0     |          | Raw HTML                               |
+| linebreak                       | Common   | inline | 0     | 0        | Hard line break                        |
+| softbreak                       | Common   | inline | 0     | 0        | Soft line break                        |
+| atx-heading                     | Common   | block  | 0     | 0        | ATX heading `# Heading`                |
+| setext-heading                  | Common   | block  | 0     | 0        | Setext heading                         |
+| blockquote                      | Common   | block  | -1    | 0        | Blockquote `> Quote`                   |
+| indented-codeblock              | Common   | block  | -2    | 0        | Indented code block                    |
+| fenced-codeblock                | Common   | block  | 0     | 0        | Fenced code block                      |
+| html                            | Common   | block  | 0     | 0        | HTML block                             |
+| table                           | Common   | block  | -1    | 0        | Table                                  |
+| thematic-break                  | Common   | block  | 0     | 0        | Thematic break                         |
+| list                            | Common   | block  | 0     | 0        | List                                   |
+| list-post                       | AST      | block  | post  | 1        | List post-processing                   |
+| link-reference-define           | AST      | block  | post  | 1        | Link reference definition              |
+| paragraph                       | AST      | block  | post  | 0        | Paragraph                              |
 
 ### Rendering Flow
 ```mermaid

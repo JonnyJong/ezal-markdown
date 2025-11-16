@@ -74,177 +74,42 @@ pnpm test
 ### 插件
 EzalMarkdown 中各语法通过插件实现。
 
-插件分为三种类型：
-- block：块级，最先解析（如段落、列表等）
-- inline：行级（如加粗、链接等）
-- atomic：原子，最后解析（如文本、换行等）
+插件分为两种级别三种类型：
+- 级别：
+  - block：块级，最先解析（如段落、列表等）
+  - inline：行级（如加粗、链接等）
+- 类型：
+  - `RendererPlugin`：渲染插件，仅用于渲染，在 EzalMarkdown 用于渲染普通文本
+  - `CommonPlugin`：一般插件，通过文本匹配并处理渲染
+  - `ASTPlugin`：AST 插件，在 AST 上解析、替换为自定义节点并渲染
 
 ### 内置插件
 
-块级插件：
-| 名称               | 优先级 | 说明               |
-| ------------------ | ------ | ------------------ |
-| paragraph          | -2     | 段落（不解析内容） |
-| blockquote         | 0      | 引用块             |
-| codeblock          | 0      | 缩进式代码块       |
-| codeblock-fenced   | 0      | 围栏代码块         |
-| footnote           | 0      | 脚注（源）         |
-| heading            | 0      | ATX 风格标题       |
-| heading-underscore | 0      | Setext 风格标题    |
-| hr                 | 0      | 水平线             |
-| image              | 0      | 图像               |
-| image-reference    | 0      | 图像（引用）       |
-| list-ordered       | 0      | 有序列表           |
-| list-unordered     | 0      | 无序列表           |
-| list-task          | 0      | 任务列表（GFM）    |
-| table              | 0      | 表格               |
-| tex-dollar         | 0      | Tex `$$...$$`      |
-| tex-bracket        | 0      | Tex `\[...\]`      |
-| html               | 0      |                    |
-| html-comment       | 0      |                    |
-
-行级插件：
-| 名称            | 优先级 | 说明                     |
-| --------------- | ------ | ------------------------ |
-| bold            | 0      | 加粗                     |
-| italic          | 0      | 斜体                     |
-| bold-italic     | 0      | 加粗斜体                 |
-| del             | 0      | 删除线                   |
-| code            | 0      | 行内代码                 |
-| footnote        | 0      | 脚注（引用）             |
-| image           | 0      | 图像                     |
-| image-reference | 0      | 图像（引用）             |
-| link            | 0      | 链接                     |
-| link-source     | 0      | 链接（源）；也作物图像源 |
-| link-reference  | 0      | 链接（引用）             |
-| link-bracket    | 0      | 自动链接                 |
-| email-bracket   | 0      | 自动邮箱链接             |
-| tex-dollar      | 0      | Tex `$...$`              |
-| tex-bracket     | 0      | Tex `\(...\)`            |
-| html            | 0      |                          |
-| html-comment    | 0      |                          |
-| escape          | -1     | 转义字符                 |
-
-原子插件：
-| 名称       | 优先级 | 说明                             |
-| ---------- | ------ | -------------------------------- |
-| text       | -1     | 纯文本（不解析，渲染时统计字数） |
-| break-hard | 0      | 硬换行                           |
-| break-soft | 0      | 软换行                           |
-| escape     | -1     | 转义字符                         |
-
-### 共享渲染上下文
-内置插件将会在共享渲染上下文中创建/使用以下内容：
-```ts
-interface Shared {
-	/** 脚注引用 */
-	footnote: Record<string, string>;
-	/** 链接引用 */
-	links: Record<string, { href: string, title?: string }>;
-}
-```
-
-### 自定义插件
-```ts
-interface Plugin<
-	T extends NodeType,
-	R extends TypeToParseResult<T> = TypeToParseResult<T>,
-	C = never,
-> {
-	/** 名称 */
-	name: string;
-	/**
-	 * 节点类型
-	 * @description
-	 * - `block`：块节点
-	 * - `inline`：行级节点
-	 * - `atomic`：原子节点
-	 */
-	type: T;
-	/**
-	 * 优先级
-	 * @default 0
-	 */
-	priority?: number;
-	/**
-	 * 匹配起始位置
-	 * @description
-	 * - `StartMatcher`：使用函数匹配，返回 `-1 | null | undefined` 表示未匹配
-	 * - `string`：匹配字符串所在位置
-	 * - `RegExp`：匹配正则表达式所在位置
-	 */
-	start:
-		| string
-		| RegExp
-		| ((
-				source: string,
-				context: PluginContext<C>,
-		  ) => PromiseOr<number | RegExpMatchArray | null | undefined>);
-	/** 解析 */
-	parse(
-		source: string,
-		context: PluginContext<C, this>,
-	): PromiseOr<R | null | undefined | false>;
-	/** 渲染 */
-	render(
-		source: ParseResultToRenderSource<R>,
-		context: PluginContext<C, this>,
-	): PromiseOr<string>;
-	/** 初始化插件内上下文 */
-	context?: C extends never ? undefined : () => PromiseOr<C>;
-}
-```
-
-### AST
-EzalMarkdown 通过解析 AST 后转换为 HTML 以渲染 Markdown 文本。
-
-AST 根为节点数组 `Node[]`，节点定义如下：
-```ts
-type Children<T> = T | Children<T>[] | { [key: string]: Children<T> };
-
-/**
- * 节点类型
- * @description
- * - `block`：块节点
- * - `inline`：行内节点
- * - `atomic`：原子节点
- */
-type NodeType = 'block' | 'inline' | 'atomic';
-
-/** 基础节点 */
-interface BaseNode {
-	/** 节点对应插件名称 */
-	name: string;
-	/** 节点类型 */
-	type: NodeType;
-	/** 节点原始数据 */
-	raw: string;
-	/** 节点对应插件的自定义数据 */
-	data: object;
-}
-
-/** 原子节点 */
-interface AtomicNode extends BaseNode {
-	/** 节点类型 */
-	type: 'atomic';
-}
-
-/** 行级节点 */
-interface InlineNode extends BaseNode {
-	/** 节点类型 */
-	type: 'inline';
-	/** 子节点 */
-	children: Children<AtomicNode | InlineNode>;
-}
-
-/** 块级节点 */
-interface BlockNode extends BaseNode {
-	/** 节点类型 */
-	type: 'block';
-	/** 子节点 */
-	children: Children<Node>;
-}
-```
+| 名称                            | 类型 | 级别 | 顺序 | 优先级 | 说明                            |
+| ------------------------------- | ---- | ---- | ---- | ------ | ------------------------------- |
+| text                            | 渲染 | 行级 | N/A  | N/A    | 渲染文本节点                    |
+| emphasis-and-links              | AST  | 行级 | post | 0      | 强调、删除线、链接、图像        |
+| autolink                        | 普通 | 行级 | 0    | 0      | 自动链接 `<https://jonnys.top>` |
+| code                            | 普通 | 行级 | 0    | 0      | 行内代码 `` `code` ``           |
+| entity-reference                | 普通 | 行级 | 0    | 0      | 实体引用                        |
+| decimal-character-reference     | 普通 | 行级 | 0    | 0      | 十进制字符引用                  |
+| hexadecimal-character-reference | 普通 | 行级 | 0    | 0      | 十六进制字符引用                |
+| escape                          | 普通 | 行级 | 0    | 0      | 字符转义                        |
+| html                            | 普通 | 行级 | 0    |        | 原始 HTML                       |
+| linebreak                       | 普通 | 行级 | 0    | 0      | 硬换行                          |
+| softbreak                       | 普通 | 行级 | 0    | 0      | 软换行                          |
+| atx-heading                     | 普通 | 块级 | 0    | 0      | ATX 标题 `# Heading`            |
+| setext-heading                  | 普通 | 块级 | 0    | 0      | Setext 标题                     |
+| blockquote                      | 普通 | 块级 | -1   | 0      | 引用块 `> Quote`                |
+| indented-codeblock              | 普通 | 块级 | -2   | 0      | 缩进代码块                      |
+| fenced-codeblock                | 普通 | 块级 | 0    | 0      | 围栏代码块                      |
+| html                            | 普通 | 块级 | 0    | 0      | HTML 块                         |
+| table                           | 普通 | 块级 | -1   | 0      | 表格                            |
+| thematic-break                  | 普通 | 块级 | 0    | 0      | 主题分隔符                      |
+| list                            | 普通 | 块级 | 0    | 0      | 列表                            |
+| list-post                       | AST  | 块级 | post | 1      | 列表后处理                      |
+| link-reference-define           | AST  | 块级 | post | 1      | 链接引用定义                    |
+| paragraph                       | AST  | 块级 | post | 0      | 段落                            |
 
 ### 渲染流程
 ```mermaid
