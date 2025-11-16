@@ -442,6 +442,7 @@ export * from './counter';
 export * from './frontmatter';
 export type { LogData, Logger } from './logger';
 export * from './node';
+export type { PluginContext, PluginLogger } from './plugin';
 export {
 	AutoLinkParsed,
 	LinkTarget,
