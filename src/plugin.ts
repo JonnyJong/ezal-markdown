@@ -349,6 +349,7 @@ export class PluginContextMap {
 			// Order
 			this.#map[type][1][0].sort(comparePriority);
 			this.#map[type][1][2].sort(comparePriority);
+			this.#map[type][2].sort(comparePriority);
 			const plugins: [order: number, CommonPluginContext<typeof type>[]][] = [];
 			for (const [order, p] of map) {
 				p.sort(comparePriority);
