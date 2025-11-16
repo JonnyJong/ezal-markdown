@@ -1,4 +1,4 @@
-import { RendererPlugin } from '../types';
+import type { RendererPlugin } from '../types';
 import { escapeHTML } from '../utils';
 
 /**

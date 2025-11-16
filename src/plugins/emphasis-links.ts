@@ -1,9 +1,9 @@
 /** biome-ignore-all lint/suspicious/noControlCharactersInRegex: Need to match control characters in regex */
 import { Node, ParsedNode, Text } from '../node';
-import { normalizeLabel, RefMap } from '../ref-map';
-import { ASTPlugin } from '../types';
+import { normalizeLabel, type RefMap } from '../ref-map';
+import type { ASTPlugin } from '../types';
 import { $, escapeMarkdown } from '../utils';
-import { DEFAULT_RESOLVER, LinkTargetResolver } from './autolink';
+import { DEFAULT_RESOLVER, type LinkTargetResolver } from './autolink';
 
 export interface EmphasisAndLinkOption {
 	/** 链接目标解析器 */

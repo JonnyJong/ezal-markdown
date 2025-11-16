@@ -1,7 +1,7 @@
 //#region Queue
 
 import { decodeHTML5Strict } from 'entities';
-import { MappedNested, Nested, PromiseOr } from './types';
+import type { MappedNested, Nested, PromiseOr } from './types';
 
 interface QueueItem<T> {
 	data: T;
@@ -158,7 +158,7 @@ export class OrderedPositionMap<T> {
 	}
 	/** 按最小位置顺序取出 */
 	*entires(): Generator<[index: number, value: T], void, void> {
-		while (this.#keys.length) {
+		while (this.#keys.length > 0) {
 			const key = this.#keys.at(-1)!;
 			const items = this.#map.get(key)!;
 			const value = items.pop()!;
@@ -402,9 +402,11 @@ export function $(
 			let value: string | undefined;
 			if (typeof v === 'number') value = `${v}px`;
 			else if (typeof v === 'string') {
-				value = v.replace(PATTERN_CSS_VAR, (v) => {
-					return `var(${v.replace(PATTERN_CSS_VAR_DECLARE, '--').replace(PATTERN_CSS_UPPER, (c) => `-${c.toLowerCase()}`)})`;
-				});
+				value = v.replace(
+					PATTERN_CSS_VAR,
+					(v) =>
+						`var(${v.replace(PATTERN_CSS_VAR_DECLARE, '--').replace(PATTERN_CSS_UPPER, (c) => `-${c.toLowerCase()}`)})`,
+				);
 			}
 			if (!value) continue;
 			const key = k
@@ -534,9 +536,8 @@ export function stackSafeRecursion<
 	Fn extends (...args: unknown[]) => Promise<unknown>,
 >(fn: (rec: Fn, ...args: Parameters<Fn>) => ReturnType<Fn>): Fn {
 	return ((...args: Parameters<Fn>) => {
-		const rec = async (...args: Parameters<Fn>): Promise<ReturnType<Fn>> => {
-			return (await Promise.resolve().then(() => fn(rec as any, ...args))) as any;
-		};
+		const rec = async (...args: Parameters<Fn>): Promise<ReturnType<Fn>> =>
+			(await Promise.resolve().then(() => fn(rec as any, ...args))) as any;
 		return rec(...args);
 	}) as any;
 }

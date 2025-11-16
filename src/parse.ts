@@ -1,11 +1,21 @@
-import { extractFrontmatter, FrontmatterExtractResult } from './frontmatter';
-import { Document, NODE_TYPES, Node, NodeType, ParsedNode, Text } from './node';
 import {
-	CommonPluginContext,
+	extractFrontmatter,
+	type FrontmatterExtractResult,
+} from './frontmatter';
+import {
+	Document,
+	NODE_TYPES,
+	type Node,
+	type NodeType,
+	ParsedNode,
+	Text,
+} from './node';
+import {
+	type CommonPluginContext,
 	comparePriority,
-	PluginContextMap,
+	type PluginContextMap,
 } from './plugin';
-import { Context, ResolvedOptions, TokenizeOptions } from './types';
+import type { Context, ResolvedOptions, TokenizeOptions } from './types';
 import { isObject, OrderedPositionMap, stackSafeRecursion } from './utils';
 
 export interface ParseResult {

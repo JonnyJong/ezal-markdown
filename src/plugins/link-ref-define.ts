@@ -1,7 +1,7 @@
-import { Node, Text } from '../node';
-import { PluginLogger } from '../plugin';
-import { normalizeLabel, RefMap } from '../ref-map';
-import { ASTPlugin } from '../types';
+import { type Node, Text } from '../node';
+import type { PluginLogger } from '../plugin';
+import { normalizeLabel, type RefMap } from '../ref-map';
+import type { ASTPlugin } from '../types';
 import { escapeMarkdown, isEmpty } from '../utils';
 import {
 	destinationLengthOf,

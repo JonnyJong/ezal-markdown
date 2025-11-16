@@ -1,4 +1,4 @@
-import { Nested, Parsed, SafeAny, TokenizeOptions } from './types';
+import type { Nested, Parsed, SafeAny, TokenizeOptions } from './types';
 import { entiresNested, omit, Queue } from './utils';
 
 /**
@@ -397,7 +397,7 @@ export class Node implements Partial<TokenizeOptions> {
 			result += `\n${' '.repeat(stack.length * 2)}`;
 			result += node.#getNodeString();
 			if (node.extraDebugInfo) result += `(${node.extraDebugInfo()})`;
-			if (node.#children.length) {
+			if (node.#children.length > 0) {
 				result += ' {';
 				stack.push(node.#children.values());
 			}
@@ -500,7 +500,7 @@ function removeEmptyText(root: Node) {
 		const node = root.child(i);
 		if (!node) return;
 		if (!(node instanceof Text)) continue;
-		if (node.raw.length) continue;
+		if (node.raw.length > 0) continue;
 		node.remove();
 		i--;
 	}

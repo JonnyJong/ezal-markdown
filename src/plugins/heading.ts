@@ -1,6 +1,6 @@
-import { ParsedChild } from '../node';
-import { Toc } from '../toc';
-import { CommonPlugin, Parsed } from '../types';
+import type { ParsedChild } from '../node';
+import type { Toc } from '../toc';
+import type { CommonPlugin, Parsed } from '../types';
 import { $ } from '../utils';
 import { PATTERN_BLOCKQUOTE_START } from './blockquote';
 import { PATTERN_LINK_REF_DEFINE_START } from './link-ref-define';
@@ -115,7 +115,7 @@ export function heading(options?: HeadingOptions) {
 			const { text, anchor } = register(toc, level, content);
 			return {
 				raw,
-				level: level,
+				level,
 				anchor,
 				children: md(text, 'inline'),
 				text,
@@ -146,7 +146,7 @@ export function heading(options?: HeadingOptions) {
 			const { text, anchor } = register(toc, level, content);
 			return {
 				raw,
-				level: level,
+				level,
 				anchor,
 				children: md(text, 'inline'),
 				text,

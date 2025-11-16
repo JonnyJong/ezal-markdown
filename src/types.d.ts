@@ -1,11 +1,15 @@
-import { Anchors, AnchorsInit } from './anchor';
-import { Counter } from './counter';
-import { FrontmatterExtractOptions } from './frontmatter';
-import { Logger } from './logger';
-import { Node, NodeType, ParsedChild } from './node';
-import { PluginContext, PluginContextMap, PluginsContextData } from './plugin';
-import { RefMap } from './ref-map';
-import { Toc } from './toc';
+import type { Anchors, AnchorsInit } from './anchor';
+import type { Counter } from './counter';
+import type { FrontmatterExtractOptions } from './frontmatter';
+import type { Logger } from './logger';
+import type { Node, NodeType, ParsedChild } from './node';
+import type {
+	PluginContext,
+	PluginContextMap,
+	PluginsContextData,
+} from './plugin';
+import type { RefMap } from './ref-map';
+import type { Toc } from './toc';
 
 //#region Utils
 

@@ -1,5 +1,5 @@
 import { decodeHTML5Strict } from 'entities';
-import { CommonPlugin, Parsed } from '../types';
+import type { CommonPlugin, Parsed } from '../types';
 import { escapeHTML } from '../utils';
 
 export interface CharReferenceParsed extends Parsed {

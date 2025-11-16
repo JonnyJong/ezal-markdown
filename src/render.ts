@@ -1,5 +1,5 @@
-import { Document, Node, ParsedChild, ParsedNode, Text } from './node';
-import { Context, ResolvedOptions } from './types';
+import { Document, type Node, ParsedChild, ParsedNode, Text } from './node';
+import type { Context, ResolvedOptions } from './types';
 
 export interface HTMLRenderResult {
 	/** 选项 */

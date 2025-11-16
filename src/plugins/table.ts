@@ -1,5 +1,5 @@
-import { ParsedChild } from '../node';
-import { CommonPlugin, Parsed } from '../types';
+import type { ParsedChild } from '../node';
+import type { CommonPlugin, Parsed } from '../types';
 import { $, eachLine, isEmpty } from '../utils';
 import { PATTERN_BLOCKQUOTE_START } from './blockquote';
 import { PATTERN_LIST_START } from './list';
@@ -99,7 +99,7 @@ export function table(
 			let line = iter.next().value?.[0];
 			if (!line) return;
 			const head = getCells(line);
-			if (!head.length) return;
+			if (head.length === 0) return;
 			raw += line;
 			// Align
 			line = iter.next().value?.[0];

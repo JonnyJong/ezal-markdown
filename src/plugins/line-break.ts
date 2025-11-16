@@ -1,4 +1,4 @@
-import { CommonPlugin } from '../types';
+import type { CommonPlugin } from '../types';
 import { $ } from '../utils';
 
 const PATTERN_HARD = /( {2,}|\\)\n/;

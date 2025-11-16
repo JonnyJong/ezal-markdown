@@ -1,5 +1,5 @@
-import { ParsedChild } from '../node';
-import { CommonPlugin, Parsed, PromiseOr } from '../types';
+import type { ParsedChild } from '../node';
+import type { CommonPlugin, Parsed, PromiseOr } from '../types';
 import {
 	$,
 	eachLine,
@@ -49,9 +49,8 @@ const DEFAULT_OPTIONS: Required<CodeblockOptions> = {
 	packager: (html, lang) => $('pre', $('code', { class: lang, html })),
 };
 
-// TODO：自定义包装函数
 export function codeblock(options?: CodeblockOptions) {
-	const { highlighter, packager } = Object.assign({}, DEFAULT_OPTIONS, options);
+	const { highlighter, packager } = { ...DEFAULT_OPTIONS, ...options };
 	async function render({ code, lang }: CodeblockParsed) {
 		if (!highlighter) return $('pre', $('code', { content: code }));
 		const result = await highlighter(code, lang);

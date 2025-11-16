@@ -42,7 +42,6 @@ async function loadYaml(): Promise<YamlModule> {
 		// @ts-expect-error
 		yaml = require('yaml');
 		return yaml as YamlModule;
-		// biome-ignore lint/suspicious/noEmptyBlockStatements: Will try another way if this fails
 	} catch {}
 	try {
 		yaml = await import('yaml');
@@ -92,6 +91,6 @@ export async function extractFrontmatter(
 		raw,
 		data: data[0],
 		content: data,
-		errors: errors.length ? errors : undefined,
+		errors: errors.length > 0 ? errors : undefined,
 	};
 }

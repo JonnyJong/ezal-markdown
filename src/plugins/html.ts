@@ -1,4 +1,4 @@
-import { CommonPlugin, Parsed } from '../types';
+import type { CommonPlugin, Parsed } from '../types';
 
 // HTML Block
 const HTML_TAG_TYPE_1 = ['pre', 'script', 'style', 'textarea'];
@@ -93,7 +93,7 @@ const PATTERN_HTML_RAW = new RegExp(
 		// Processing Instruction
 		String.raw`<\?>|<\?[\s\S]*?\?>`,
 		// Declaration
-		`<![A-Za-z][^>]*>`,
+		'<![A-Za-z][^>]*>',
 		// CDATA Section
 		String.raw`<!\[CDATA\[[\s\S]*?\]\]>`,
 	].join('|'),

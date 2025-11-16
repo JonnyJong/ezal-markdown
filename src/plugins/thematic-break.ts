@@ -1,4 +1,4 @@
-import { CommonPlugin } from '../types';
+import type { CommonPlugin } from '../types';
 import { $ } from '../utils';
 
 export const PATTERN_THEMATIC_BREAK =

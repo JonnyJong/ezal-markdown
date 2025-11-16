@@ -1,4 +1,4 @@
-import { NodeType } from './node';
+import type { NodeType } from './node';
 
 export interface LogData {
 	/** 插件类型 */

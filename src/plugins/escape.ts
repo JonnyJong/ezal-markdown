@@ -1,4 +1,4 @@
-import { CommonPlugin, Parsed } from '../types';
+import type { CommonPlugin, Parsed } from '../types';
 import { escapeHTML } from '../utils';
 
 export interface EscapeParsed extends Parsed {

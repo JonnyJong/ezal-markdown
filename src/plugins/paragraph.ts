@@ -1,5 +1,5 @@
 import { Node, ParsedChild, ParsedNode, Text } from '../node';
-import { ASTPlugin } from '../types';
+import type { ASTPlugin } from '../types';
 import { $, isEmpty } from '../utils';
 
 /** 段落节点 */
@@ -55,10 +55,10 @@ function parse(root: Node) {
 				texts[0].remove();
 				j--;
 			}
-			if (nodes.length) break;
+			if (nodes.length > 0) break;
 		}
 		// 生成段落
-		if (!nodes.length) continue;
+		if (nodes.length === 0) continue;
 		const node = new Paragraph(nodes);
 		root.insert(i, node);
 		// 正则化

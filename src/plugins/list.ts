@@ -1,5 +1,5 @@
-import { Node, ParsedChild, ParsedNode, Text } from '../node';
-import { ASTPlugin, CommonPlugin, Parsed } from '../types';
+import { type Node, type ParsedChild, ParsedNode, Text } from '../node';
+import type { ASTPlugin, CommonPlugin, Parsed } from '../types';
 import { $, eachLine, indentSizeOf, isEmpty, reduceIndent } from '../utils';
 import { PATTERN_BLOCKQUOTE_START } from './blockquote';
 import { PATTERN_FENCE_START } from './codeblock';

@@ -1,4 +1,4 @@
-import { CommonPlugin, Parsed } from '../types';
+import type { CommonPlugin, Parsed } from '../types';
 import { $ } from '../utils';
 
 export interface AutoLinkParsed extends Parsed {

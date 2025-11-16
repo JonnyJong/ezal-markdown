@@ -1,9 +1,11 @@
+/** biome-ignore-all lint/performance/noBarrelFile: Entry File */
+
 import { Anchors } from './anchor';
 import { Counter } from './counter';
-import { defaultLogger, Logger } from './logger';
-import { NODE_TYPES, Node, NodeType } from './node';
-import { ParseResult, parse } from './parse';
-import { PluginContextMap, PluginsManager, PluginsMap } from './plugin';
+import { defaultLogger, type Logger } from './logger';
+import { NODE_TYPES, type Node, type NodeType } from './node';
+import { type ParseResult, parse } from './parse';
+import { PluginContextMap, PluginsManager, type PluginsMap } from './plugin';
 import { autolink } from './plugins/autolink';
 import { text } from './plugins/base';
 import { blockquote } from './plugins/blockquote';
@@ -25,9 +27,9 @@ import { paragraph } from './plugins/paragraph';
 import { table } from './plugins/table';
 import { thematicBreak } from './plugins/thematic-break';
 import { RefMap } from './ref-map';
-import { HTMLRenderResult, renderHTML } from './render';
+import { type HTMLRenderResult, renderHTML } from './render';
 import { Toc } from './toc';
-import {
+import type {
 	Context,
 	Nested,
 	ParseOptions,
@@ -79,8 +81,8 @@ async function resolveOptions(
 		lineBreak: 'common-mark',
 		context,
 	};
-	if (NODE_TYPES.includes(options?.maxLevel!)) {
-		result.maxLevel = options?.maxLevel!;
+	if (NODE_TYPES.includes(options!.maxLevel!)) {
+		result.maxLevel = options!.maxLevel!;
 	}
 	if (options?.skipParagraphWrapping === true) {
 		result.skipParagraphWrapping = true;
@@ -91,8 +93,8 @@ async function resolveOptions(
 	) {
 		result.frontmatter = options.frontmatter;
 	}
-	if (['common-mark', 'soft'].includes(options?.lineBreak!)) {
-		result.lineBreak = options?.lineBreak!;
+	if (['common-mark', 'soft'].includes(options!.lineBreak!)) {
+		result.lineBreak = options!.lineBreak!;
 	}
 	return result;
 }

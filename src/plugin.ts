@@ -1,5 +1,5 @@
-import { NODE_TYPES, Node, NodeType, ParsedChild } from './node';
-import {
+import { NODE_TYPES, type Node, type NodeType, ParsedChild } from './node';
+import type {
 	ASTPlugin,
 	CommonPlugin,
 	Context,

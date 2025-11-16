@@ -1,5 +1,5 @@
-import { ParsedChild } from '../node';
-import { CommonPlugin, Parsed } from '../types';
+import type { ParsedChild } from '../node';
+import type { CommonPlugin, Parsed } from '../types';
 import { $, eachLine, indentSizeOf, isEmpty } from '../utils';
 import { PATTERN_FENCE_START } from './codeblock';
 import { PATTERN_LIST_START } from './list';
