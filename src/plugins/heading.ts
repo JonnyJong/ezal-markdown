@@ -1,7 +1,7 @@
 import type { ParsedChild } from '../node';
 import type { Toc } from '../toc';
 import type { CommonPlugin, Parsed } from '../types';
-import { $ } from '../utils';
+import { $, eachLine, indentSizeOf } from '../utils';
 import { PATTERN_BLOCKQUOTE_START } from './blockquote';
 import { PATTERN_LINK_REF_DEFINE_START } from './link-ref-define';
 import { PATTERN_LIST_START } from './list';
@@ -46,8 +46,8 @@ export interface HeadingOptions {
 export const PATTERN_ATX_START = /(?<=^|\n) {0,3}#{1,6}([ \t\n]|$)/;
 const PATTERN_ATX_PREFIX = /^( {0,3})(#*)(?=$| |\t)/;
 const PATTERN_ATX_END = /([ \t]#*[ \t]*)?(\n|$)/;
-const PATTERN_SETEXT =
-	/(?<=^|\n)( {0,3}\S.*\n((\t{0,0}| {0,3})\S.*\n)*?) {0,3}(=+|-+)[ \t]*(\n|$)/;
+const PATTERN_SETEXT_QUICK_CHECK = /(?<=^|\n) {0,3}[=-]/;
+const PATTERN_SETEXT = /^ {0,3}(=+|-+)\s*(?=\n|$)/;
 const PATTERN_CUSTOM_ID = /(?<= ){#([A-Za-z0-9|_|-]+)}/;
 
 export function createHeadingRegister(options?: HeadingOptions) {
@@ -82,6 +82,7 @@ function getCustomAnchor(text: string) {
 
 export function heading(options?: HeadingOptions) {
 	const containerInterruptPatterns = options?.containerInterruptPatterns ?? [
+		PATTERN_ATX_START,
 		PATTERN_BLOCKQUOTE_START,
 		PATTERN_LIST_START,
 		PATTERN_LINK_REF_DEFINE_START,
@@ -133,24 +134,43 @@ export function heading(options?: HeadingOptions) {
 		type: 'block',
 		order: 0,
 		priority: 0,
-		start: PATTERN_SETEXT,
+		start(source) {
+			if (!PATTERN_SETEXT_QUICK_CHECK.test(source)) return;
+			let offset = 0;
+			for (const [line] of eachLine(source)) {
+				if (indentSizeOf(line) > 3 || line.trim().length === 0) {
+					offset += line.length;
+					continue;
+				}
+				return offset;
+			}
+			return;
+		},
 		parse(source, { toc, md }) {
-			const matched = source.match(PATTERN_SETEXT);
-			if (!matched) return;
-			const level = matched[4][0] === '=' ? 1 : 2;
-			const raw = matched[0];
+			// Collect
+			let raw = '';
+			let content = '';
+			let level = 0;
+			for (const [line] of eachLine(source)) {
+				raw += line;
+				if (line.trim().length === 0) return;
+				const matched = line.match(PATTERN_SETEXT);
+				if (!matched) {
+					content += line;
+					continue;
+				}
+				level = matched[1][0] === '=' ? 1 : 2;
+				break;
+			}
+			// Check
+			if (!level) return;
+			content = content.trim();
+			if (!content) return;
 			for (const pattern of containerInterruptPatterns) {
 				if (pattern.test(raw)) return;
 			}
-			const content = matched[1].trim();
 			const { text, anchor } = register(toc, level, content);
-			return {
-				raw,
-				level,
-				anchor,
-				children: md(text, 'inline'),
-				text,
-			};
+			return { raw, level, anchor, children: md(text, 'inline'), text };
 		},
 		render,
 	};
