@@ -445,41 +445,45 @@ export * from './frontmatter';
 export type { LogData, Logger } from './logger';
 export * from './node';
 export type { PluginContext, PluginLogger } from './plugin';
-export {
+export type {
 	AutoLinkParsed,
 	LinkTarget,
 	LinkTargetResolver,
 } from './plugins/autolink';
 export {
-	BlockquoteParsed,
+	type BlockquoteParsed,
 	PATTERN_BLOCKQUOTE_START,
 } from './plugins/blockquote';
-export { CodeParsed } from './plugins/code';
+export type { CodeParsed } from './plugins/code';
 export {
-	CodeblockOptions,
-	CodeblockParsed,
-	CodeHighlighter,
+	type CodeblockOptions,
+	type CodeblockParsed,
+	type CodeHighlighter,
 	PATTERN_FENCE_START,
 } from './plugins/codeblock';
 export {
 	DelNode,
-	EmphasisAndLinkOption,
+	type EmphasisAndLinkOption,
 	EmphNode,
 	ImageNode,
 	LinkNode,
 	StrongNode,
 } from './plugins/emphasis-links';
-export { CharReferenceParsed } from './plugins/entity';
-export { EscapeParsed } from './plugins/escape';
+export type { CharReferenceParsed } from './plugins/entity';
+export type { EscapeParsed } from './plugins/escape';
 export {
-	HeadingOptions,
-	HeadingParsed,
+	type HeadingOptions,
+	type HeadingParsed,
 	PATTERN_ATX_START,
 } from './plugins/heading';
-export { HTMLBlockParsed } from './plugins/html';
-export { ListOptions, ListParsed, PATTERN_LIST_START } from './plugins/list';
+export type { HTMLBlockParsed } from './plugins/html';
+export {
+	type ListOptions,
+	type ListParsed,
+	PATTERN_LIST_START,
+} from './plugins/list';
 export { Paragraph } from './plugins/paragraph';
-export { PATTERN_TABLE_START, TableParsed } from './plugins/table';
+export { PATTERN_TABLE_START, type TableParsed } from './plugins/table';
 export { PATTERN_THEMATIC_BREAK } from './plugins/thematic-break';
 export * from './ref-map';
 export * from './toc';

@@ -8,9 +8,8 @@
 	"scripts": {
 		"test": "vitest",
 		"test:ci": "vitest run",
-		"compile": "rollup -c",
-		"clean": "rimraf dist",
-		"prepublish": "pnpm clean && pnpm compile"
+		"compile": "rolldown -c",
+		"prepublish": "pnpm compile"
 	},
 	"repository": {
 		"type": "git",
@@ -27,12 +26,10 @@
 	},
 	"homepage": "https://github.com/JonnyJong/ezal-markdown#readme",
 	"devDependencies": {
-		"@rollup/plugin-typescript": "^12.1.4",
+		"@types/node": "^24.10.1",
 		"@vitest/coverage-v8": "3.2.4",
 		"@vitest/expect": "3.2.4",
-		"rimraf": "^6.0.1",
-		"rollup": "^4.46.3",
-		"rollup-plugin-dts": "^6.2.3",
+		"rolldown": "1.0.0-beta.51",
 		"tslib": "^2.8.1",
 		"typescript": "5.8.3",
 		"vitest": "3.2.4"

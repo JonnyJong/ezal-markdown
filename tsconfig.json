@@ -5,6 +5,7 @@
 		"module": "esnext",
 		"moduleResolution": "bundler",
 		"lib": ["ESNext"],
+		"types": ["yaml"],
 		// Checking
 		"strict": true,
 		"noImplicitAny": true,
@@ -29,7 +30,9 @@
 		"removeComments": false,
 		"newLine": "lf",
 		"declaration": true,
-		"outDir": "dist"
+		"rootDir": "src",
+		"outDir": "dist",
+		"emitDeclarationOnly": true,
 	},
 	"include": ["src/**/*"],
 	"exclude": ["dist"]
