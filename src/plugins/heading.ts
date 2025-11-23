@@ -3,6 +3,7 @@ import type { Toc } from '../toc';
 import type { CommonPlugin, Parsed } from '../types';
 import { $, eachLine, indentSizeOf } from '../utils';
 import { PATTERN_BLOCKQUOTE_START } from './blockquote';
+import { PATTERN_FENCE_START } from './codeblock';
 import { PATTERN_LINK_REF_DEFINE_START } from './link-ref-define';
 import { PATTERN_LIST_START } from './list';
 
@@ -86,6 +87,7 @@ export function heading(options?: HeadingOptions) {
 		PATTERN_BLOCKQUOTE_START,
 		PATTERN_LIST_START,
 		PATTERN_LINK_REF_DEFINE_START,
+		PATTERN_FENCE_START,
 	];
 	const register = createHeadingRegister(options);
 

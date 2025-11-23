@@ -3,7 +3,7 @@
 import { describe, expect, it } from 'vitest';
 import { EzalMarkdown } from '../../src';
 import { heading } from '../../src/plugins/heading';
-import { ASTLikeNode, initAstMatcher } from '../ast';
+import { type ASTLikeNode, initAstMatcher } from '../ast';
 
 initAstMatcher();
 
@@ -109,6 +109,14 @@ describe('Plugin: atx-heading', () => {
 				anchorPrefix: 'foo-',
 			}),
 		);
+		const result = await renderer.parse(md);
+		expect(result.document).toLikeAst(ast);
+	});
+
+	it('setext priority', async () => {
+		const md = '```md\n---\n```';
+		const ast: ASTLikeNode = ['document', [['fenced-codeblock', {}]]];
+		const renderer = new EzalMarkdown();
 		const result = await renderer.parse(md);
 		expect(result.document).toLikeAst(ast);
 	});
