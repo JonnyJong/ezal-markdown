@@ -56,7 +56,7 @@ export class PluginsManager {
 	 * @throws 当存在校验失败的插件时，抛出错误，且不会设置任何插件
 	 * @returns 是否存在插件覆盖
 	 */
-	set(...plugins: Nested<Plugin<NodeType>>[]): boolean {
+	set(...plugins: Nested<Plugin<NodeType, Parsed, Node, any>>[]): boolean {
 		let override = false;
 		for (const plugin of [...entiresNested(plugins, checkPlugin)]) {
 			if (this.#map[plugin.type].has(plugin.name)) override = true;

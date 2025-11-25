@@ -32,6 +32,7 @@ import { Toc } from './toc';
 import type {
 	Context,
 	Nested,
+	Parsed,
 	ParseOptions,
 	Plugin,
 	ResolvedOptions,
@@ -156,7 +157,7 @@ export class EzalMarkdown {
 	 * @throws 当存在校验失败的插件时，抛出错误，且不会设置任何插件
 	 * @returns 是否存在插件覆盖
 	 */
-	set(...plugins: Nested<Plugin<NodeType>>[]): boolean {
+	set(...plugins: Nested<Plugin<NodeType, Parsed, Node, any>>[]): boolean {
 		return this.#plugins.set(...plugins);
 	}
 	/**
@@ -232,7 +233,7 @@ export class EzalMarkdown {
 	 * @throws 当存在校验失败的插件时，抛出错误，且不会设置任何插件
 	 * @returns 是否存在插件覆盖
 	 */
-	static set(...plugins: Nested<Plugin<NodeType>>[]): boolean {
+	static set(...plugins: Nested<Plugin<NodeType, Parsed, Node, any>>[]): boolean {
 		return globalPlugins.set(...plugins);
 	}
 	/**
